@@ -15,7 +15,7 @@ export class TSVFileReader implements FileReader {
       email,
       avatarUrl,
       password,
-      isPro: Boolean(isPro),
+      isPro,
     });
   }
 
@@ -47,10 +47,10 @@ export class TSVFileReader implements FileReader {
         city: CityName[city as keyof typeof CityName],
         previewImage,
         images: images.split(';'),
-        isPremium: Boolean(isPremium),
-        isFavorite: Boolean(isFavorite),
+        isPremium,
+        isFavorite,
         rating: Number.parseFloat(rating),
-        housingType: HousingType,
+        housingType: HousingType[housingType as keyof typeof HousingType],
         bedrooms: Number.parseInt(bedrooms, 10),
         maxAdults: Number.parseInt(maxAdults, 10),
         price: Number.parseInt(price, 10),

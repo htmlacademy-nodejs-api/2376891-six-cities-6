@@ -11,10 +11,10 @@ export type Offer = {
   city: CityName;
   previewImage: string;
   images: string[] | string;
-  isPremium: boolean;
-  isFavorite: boolean;
+  isPremium: string;
+  isFavorite: string;
   rating: number;
-  housingType: typeof HousingType;
+  housingType: HousingType;
   bedrooms: number;
   maxAdults: number;
   price: number;
