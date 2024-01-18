@@ -1,13 +1,20 @@
-import { Command } from './command.interface.js';
+import { ICommand } from './command.interface.js';
 import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
+import { Command } from '../../utils/const.js';
+import chalk from 'chalk';
 
-export class ImportCommand implements Command {
-  public getName(): string {
-    return '--import';
+export class ImportCommand implements ICommand {
+  public get name(): string {
+    return Command.ImportCommand;
   }
 
   public execute(...parameters: string[]): void {
     const [filename] = parameters;
+
+    if (!filename) {
+      throw new Error('Error');
+    }
+
     const fileReader = new TSVFileReader(filename.trim());
 
     try {
@@ -18,8 +25,8 @@ export class ImportCommand implements Command {
         throw err;
       }
 
-      console.error(`Can't import data from file: ${filename}`);
-      console.error(`Details: ${err.message}`);
+      console.error(chalk.red(`Can't import data from file: ${filename}`));
+      console.error(chalk.red(`Details: ${err.message}`));
     }
   }
 }
