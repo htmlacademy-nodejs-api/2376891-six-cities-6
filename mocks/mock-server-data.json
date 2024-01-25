@@ -14,19 +14,13 @@
       "Design interior in most sympathetic area!",
       "Complitely renovated, well-equipped, cosy studio in idyllic, over 100 years old wooden house. Calm street, fast connection to center and airport."
     ],
-    "dates": [
-      "2023-09-21T09:23:20.316Z",
-      "2023-09-09T09:23:20.316Z",
-      "2023-09-12T09:23:20.316Z",
-      "2023-10-02T09:23:20.316Z",
-      "2023-10-03T09:23:20.316Z"
-    ],
     "cities": [
       "Dusseldorf",
       "Amsterdam",
       "Brussels",
       "Paris",
-      "Oslo"
+      "Cologne",
+      "Hamburg"
     ],
     "previewImages": [
       "https://14.react.pages.academy/static/offer/1.jpg",
@@ -51,26 +45,13 @@
       "https://14.react.pages.academy/static/offer/13.jpg",
       "https://14.react.pages.academy/static/offer/5.jpg"
     ],
-    "isPremiums": [
+    "isPremium": [
       "true",
-      "false",
-      "false",
-      "true",
-      "true"
+      "false"
     ],
-    "isFavorites": [
+    "isFavorite": [
       "true",
-      "false",
-      "true",
-      "false",
-      "true"
-    ],
-    "ratings": [
-      "4.2",
-      "3.8",
-      "4.7",
-      "4.5",
-      "4.6"
+      "false"
     ],
     "housingTypes": [
       "Apartment",
@@ -78,27 +59,6 @@
       "House",
       "Hotel",
       "Room"
-    ],
-    "bedrooms": [
-      "4",
-      "2",
-      "3",
-      "1",
-      "1"
-    ],
-    "maxAdults": [
-      "2",
-      "2",
-      "4",
-      "8",
-      "6"
-    ],
-    "prices": [
-      "124",
-      "150",
-      "300",
-      "50",
-      "220"
     ],
     "goods": [
       "Breakfast",
@@ -139,31 +99,7 @@
     ],
     "accountTypes": [
       "pro",
-      "обычный",
-      "pro",
-      "pro",
       "обычный"
-    ],
-    "comments": [
-      "0",
-      "20",
-      "15",
-      "5",
-      "2"
-    ],
-    "locationLatitudes": [
-      "48.85661",
-      "50.938361",
-      "50.846557",
-      "52.370216",
-      "53.550341"
-    ],
-    "locationLongitudes": [
-      "2.351499",
-      "6.959974",
-      "4.351697",
-      "4.895168",
-      "10.000654"
     ]
   }
 }
