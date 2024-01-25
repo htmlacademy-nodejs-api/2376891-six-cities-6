@@ -18,6 +18,7 @@ export enum Command {
   HelpCommand = '--help',
   VersionCommand = '--version',
   ImportCommand = '--import',
+  GenerateCommand = '--generate',
 }
 
 export const CityLocations = [
