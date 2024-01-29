@@ -1,0 +1,105 @@
+{
+  "api": {
+    "titles": [
+      "Waterfront with extraordinary view",
+      "House in countryside",
+      "Loft Studio in the Central Area",
+      "Nice, cozy, warm big bed apartment",
+      "Perfect, spacious room"
+    ],
+    "descriptions": [
+      "A new spacious villa, one floor. All commodities, jacuzzi and beautiful scenery. Ideal for families or friends.",
+      "This is a place for dreamers to reset, reflect, and create.",
+      "I am happy to welcome you to my apartment in the city center! Three words: location, cosy and chic!",
+      "Design interior in most sympathetic area!",
+      "Complitely renovated, well-equipped, cosy studio in idyllic, over 100 years old wooden house. Calm street, fast connection to center and airport."
+    ],
+    "cities": [
+      "Dusseldorf",
+      "Amsterdam",
+      "Brussels",
+      "Paris",
+      "Cologne",
+      "Hamburg"
+    ],
+    "previewImages": [
+      "https://14.react.pages.academy/static/offer/1.jpg",
+      "https://14.react.pages.academy/static/offer/2.jpg",
+      "https://14.react.pages.academy/static/offer/3.jpg",
+      "https://14.react.pages.academy/static/offer/4.jpg",
+      "https://14.react.pages.academy/static/offer/5.jpg"
+    ],
+    "images": [
+      "https://14.react.pages.academy/static/offer/15.jpg",
+      "https://14.react.pages.academy/static/offer/18.jpg",
+      "https://14.react.pages.academy/static/offer/3.jpg",
+      "https://14.react.pages.academy/static/offer/6.jpg",
+      "https://14.react.pages.academy/static/offer/19.jpg",
+      "https://14.react.pages.academy/static/offer/2.jpg",
+      "https://14.react.pages.academy/static/offer/17.jpg",
+      "https://14.react.pages.academy/static/offer/10.jpg",
+      "https://14.react.pages.academy/static/offer/1.jpg",
+      "https://14.react.pages.academy/static/offer/4.jpg",
+      "https://14.react.pages.academy/static/offer/16.jpg",
+      "https://14.react.pages.academy/static/offer/20.jpg",
+      "https://14.react.pages.academy/static/offer/13.jpg",
+      "https://14.react.pages.academy/static/offer/5.jpg"
+    ],
+    "isPremium": [
+      "true",
+      "false"
+    ],
+    "isFavorite": [
+      "true",
+      "false"
+    ],
+    "housingTypes": [
+      "Apartment",
+      "Room",
+      "House",
+      "Hotel",
+      "Room"
+    ],
+    "goods": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "users": [
+      "Angelina",
+      "Maria",
+      "Sasha",
+      "Michael",
+      "Andrew"
+    ],
+    "emails": [
+      "snow@pisem.local",
+      "president@dka.local",
+      "fish@big.local",
+      "test@pisem.local",
+      "freedom@pisem.local"
+    ],
+    "avatarUrls": [
+      "user.jpg",
+      "photo.jpg",
+      "awesome-avatar.jpg",
+      "roland.jpg",
+      "smite.jpg"
+    ],
+    "passwords": [
+      "111111",
+      "222222",
+      "333333",
+      "444444",
+      "555555"
+    ],
+    "accountTypes": [
+      "pro",
+      "обычный"
+    ]
+  }
+}
