@@ -7,7 +7,7 @@ import { getErrorMessage } from '../../shared/helpers/index.js';
 import { TSVFileWriter } from '../../shared/libs/file-writer/index.js';
 
 export class GenerateCommand implements ICommand {
-  private initialData: TMockServerData;
+  private initialData!: TMockServerData;
 
   private async load(url: string) {
     try {
