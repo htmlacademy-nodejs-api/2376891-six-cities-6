@@ -1,19 +1,17 @@
 import { Logger as PinoInstance, pino, transport } from 'pino';
 import { Logger } from './logger.interface.js';
+import { LOG_FILE_PATH } from '../../../utils/const.js';
 import { injectable } from 'inversify';
-import { resolve } from 'node:path';
-import { getCurrentModuleDirectoryPath } from '../../helpers/index.js';
+import path from 'node:path';
 
 @injectable()
 export class PinoLogger implements Logger {
   private readonly logger: PinoInstance;
 
   constructor() {
-    const modulePath = getCurrentModuleDirectoryPath();
-    const logFilePath = 'logs/rest.log';
-    const destination = resolve(modulePath, '../../../', logFilePath);
+    const destination = path.join(path.resolve(), LOG_FILE_PATH);
 
-    const multiTransport = transport({
+    this.logger = pino({}, transport({
       targets: [
         {
           target: 'pino/file',
@@ -26,9 +24,7 @@ export class PinoLogger implements Logger {
           level: 'info'
         }
       ],
-    });
-
-    this.logger = pino({}, multiTransport);
+    }));
     this.logger.info('Logger created...');
   }
 
