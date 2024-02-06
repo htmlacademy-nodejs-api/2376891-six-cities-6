@@ -23,7 +23,7 @@ export class TSVOfferGenerator implements OfferGenerator {
     const maxAdults = generateRandomValue(Adults.Min, Adults.Max);
     const price = generateRandomValue(Price.Min, Price.Max);
     const goods = getRandomItems<string>(this.mockData.goods).join(';');
-    const host = getRandomItem<string>(this.mockData.users);
+    const user = getRandomItem<string>(this.mockData.users);
     const email = getRandomItem<string>(this.mockData.emails);
     const avatarUrl = getRandomItem<string>(this.mockData.avatarUrls);
     const password = getRandomItem<string>(this.mockData.passwords);
@@ -39,7 +39,7 @@ export class TSVOfferGenerator implements OfferGenerator {
 
     return [
       title, description, createdDate, city, previewImage, images, isPremium, isFavorite, rating,
-      housingType, bedrooms, maxAdults, price, goods, host, email, avatarUrl, password, accountType,
+      housingType, bedrooms, maxAdults, price, goods, user, email, avatarUrl, password, accountType,
       comments, locationLatitude, locationLongitude
     ].join('\t');
   }

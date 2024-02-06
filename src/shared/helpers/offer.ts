@@ -1,4 +1,4 @@
-import { TOffer, HousingType, CityName, Good, HostAccountType, IHost } from '../types/index.js';
+import { TOffer, HousingType, CityName, Good, UserAccountType, IUser } from '../types/index.js';
 import { toBoolean } from '../../utils/common.js';
 
 export function createOffer(offerData: string): TOffer {
@@ -7,12 +7,12 @@ export function createOffer(offerData: string): TOffer {
     bedrooms, maxAdults, price, goods, name, email, avatarUrl, password, accountType, comments, latitude, longitude
   ] = offerData.replace('\n', '').split('\t');
 
-  const host: IHost = {
+  const user: IUser = {
     name,
     email,
     avatarUrl,
     password,
-    accountType: accountType as HostAccountType
+    accountType: accountType as UserAccountType
   };
 
   const location = {
@@ -35,7 +35,7 @@ export function createOffer(offerData: string): TOffer {
     maxAdults: Number.parseInt(maxAdults, 10),
     price: Number.parseInt(price, 10),
     goods: goods.split(';') as Good[],
-    host,
+    user,
     comments: Number.parseInt(comments, 10),
     location
   };

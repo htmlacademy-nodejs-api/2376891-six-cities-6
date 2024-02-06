@@ -1,4 +1,4 @@
-import { IHost } from './host.type.js';
+import { IUser } from './user.type.js';
 import { TLocation } from './location.type.js';
 import { CityName } from './city-name.enum.js';
 import { HousingType } from './housing-type.enum.js';
@@ -19,7 +19,7 @@ export type TOffer = {
   maxAdults: number;
   price: number;
   goods: Good[];
-  host: IHost;
+  user: IUser;
   comments: number;
   location: TLocation;
 }
