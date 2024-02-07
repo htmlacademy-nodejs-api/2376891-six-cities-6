@@ -7,6 +7,6 @@ export interface IUser {
   name: string;
   email: string;
   avatarUrl?: string;
-  password: string;
+  // password: string;
   accountType: UserAccountType;
 }
