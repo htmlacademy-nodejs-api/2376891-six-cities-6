@@ -23,7 +23,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements IUser {
   public avatarUrl!: string | undefined;
 
   @prop({required: true, minlength: [6, 'Min length for password is 6'], maxlength: [12, 'Max length for password is 12'], default: ''})
-  private password?: string;
+  public password!: string;
 
   @prop({required: true, enum: [`${UserAccountType.Common}`, `${UserAccountType.Pro}`]})
   public accountType!: UserAccountType;

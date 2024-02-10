@@ -56,7 +56,7 @@ export class OfferEntity extends defaultClasses.TimeStamps implements TOffer {
   @prop({ required: true, items: String, default: [] })
   public goods!: Good[];
 
-  @prop({ required: true, ref: UserEntity })
+  @prop({ required: true, ref: UserEntity, _id: false })
   public userId!: Ref<UserEntity>;
 
   @prop({ required: false })
