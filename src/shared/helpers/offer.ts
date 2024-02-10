@@ -1,5 +1,7 @@
 import { TOffer, HousingType, CityName, Good, UserAccountType, IUser } from '../types/index.js';
 import { toBoolean } from '../../utils/common.js';
+import { Ref } from '@typegoose/typegoose';
+import { UserEntity } from '../modules/user/user.entity.js';
 
 export function createOffer(offerData: string): TOffer {
   const [
@@ -7,7 +9,7 @@ export function createOffer(offerData: string): TOffer {
     bedrooms, maxAdults, price, goods, name, email, avatarUrl, password, accountType, comments, latitude, longitude
   ] = offerData.replace('\n', '').split('\t');
 
-  const user: IUser = {
+  const userId: IUser = {
     name,
     email,
     avatarUrl,
@@ -35,7 +37,7 @@ export function createOffer(offerData: string): TOffer {
     maxAdults: Number.parseInt(maxAdults, 10),
     price: Number.parseInt(price, 10),
     goods: goods.split(';') as Good[],
-    user,
+    userId: userId as unknown as Ref<UserEntity>,
     comments: Number.parseInt(comments, 10),
     location
   };

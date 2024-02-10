@@ -1,8 +1,9 @@
-import { IUser } from './user.type.js';
+import { Ref } from '@typegoose/typegoose';
 import { TLocation } from './location.type.js';
 import { CityName } from './city-name.enum.js';
 import { HousingType } from './housing-type.enum.js';
 import { Good } from './good.enum.js';
+import { UserEntity } from '../modules/user/index.js';
 
 export type TOffer = {
   title: string;
@@ -10,7 +11,7 @@ export type TOffer = {
   date: Date;
   city: CityName;
   previewImage: string;
-  images: string[] | string;
+  images: string[];
   isPremium: boolean;
   isFavorite: boolean;
   rating: number;
@@ -19,7 +20,7 @@ export type TOffer = {
   maxAdults: number;
   price: number;
   goods: Good[];
-  user: IUser;
+  userId: Ref<UserEntity>;
   comments: number;
   location: TLocation;
 }
