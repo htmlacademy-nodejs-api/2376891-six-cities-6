@@ -1,9 +1,9 @@
 export function getMongoURI(
-  username: string,
-  password: string,
-  host: string,
-  port: string,
-  databaseName: string,
+  username: string | undefined,
+  password: string | undefined,
+  host: string | undefined,
+  port: string | undefined,
+  databaseName: string | undefined,
 ): string {
   return `mongodb://${username}:${password}@${host}:${port}/${databaseName}?authSource=admin`;
 }

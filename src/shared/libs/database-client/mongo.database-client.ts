@@ -2,58 +2,59 @@ import * as Mongoose from 'mongoose';
 import { inject, injectable } from 'inversify';
 import { setTimeout } from 'node:timers/promises';
 import { DatabaseClient } from './database-client.interface.js';
-import { Component } from '../../types/index.js';
+import { EComponent } from '../../types/index.js';
 import { Logger } from '../logger/index.js';
-
-const RETRY_COUNT = 5;
-const RETRY_TIMEOUT = 1000;
+import { ERetry } from '../../../utils/const.js';
 
 @injectable()
 export class MongoDatabaseClient implements DatabaseClient {
   private mongoose!: typeof Mongoose;
-  private isConnected: boolean;
 
   constructor(
-    @inject(Component.Logger) private readonly logger: Logger
-  ) {
-    this.isConnected = false;
-  }
+    @inject(EComponent.Logger) private readonly logger: Logger
+  ) {}
 
-  public isConnectedToDatabase() {
-    return this.isConnected;
+  get isConnectedToDatabase(): boolean {
+    return this.mongoose?.connection.readyState === 1;
   }
 
   public async connect(uri: string): Promise<void> {
-    if (this.isConnectedToDatabase()) {
+    if (this.isConnectedToDatabase) {
       throw new Error('MongoDB client already connected');
     }
 
     this.logger.info('Trying to connect to MongoDB...');
 
     let attempt = 0;
-    while (attempt < RETRY_COUNT) {
+    while (attempt < ERetry.Count) {
       try {
         this.mongoose = await Mongoose.connect(uri);
-        this.isConnected = true;
         this.logger.info('Database connection established.');
         return;
       } catch (error) {
         attempt++;
         this.logger.error(`Failed to connect to the database. Attempt ${attempt}`, error as Error);
-        await setTimeout(RETRY_TIMEOUT);
+        await setTimeout(ERetry.Timeout);
       }
     }
 
-    throw new Error(`Unable to establish database connection after ${RETRY_COUNT}`);
+    throw new Error(`Unable to establish database connection after ${ERetry.Count}`);
   }
 
   public async disconnect(): Promise<void> {
-    if (!this.isConnectedToDatabase()) {
+    if (!this.isConnectedToDatabase || !this.mongoose) {
       throw new Error('Not connected to the database.');
     }
 
-    await this.mongoose.disconnect?.();
-    this.isConnected = false;
-    this.logger.info('Database connection closed.');
+    try {
+      await this.mongoose.disconnect();
+      this.logger.info('Database connection closed.');
+    } catch (error) {
+      if (error instanceof Error) {
+        this.logger.error('The database connection could not be closed', error);
+      }
+      throw new Error('The database connection could not be closed');
+    }
+
   }
 }

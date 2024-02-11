@@ -6,7 +6,7 @@ export type TMockServerData = {
   images: string[];
   isPremium: string[];
   isFavorite: string[];
-  housingTypes: string[];
+  offerTypes: string[];
   goods: string[];
   users: string[];
   emails: string[];

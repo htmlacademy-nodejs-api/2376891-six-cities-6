@@ -6,3 +6,5 @@ export * from './housing-type.enum.js';
 export * from './good.enum.js';
 export * from './mock-server-data.type.js';
 export * from './component.enum.js';
+export * from './location.enum.js';
+export * from './mock-offer.type.js';

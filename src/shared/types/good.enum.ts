@@ -1,4 +1,4 @@
-export enum Good {
+export enum EGood {
   Breakfast = 'Breakfast',
   Conditioner = 'Air conditioning',
   Laptop = 'Laptop friendly workspace',

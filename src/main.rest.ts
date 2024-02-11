@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 import { RestApplication, createRestApplicationContainer } from './rest/index.js';
-import { Component } from './shared/types/component.enum.js';
+import { EComponent } from './shared/types/component.enum.js';
 import { createUserContainer } from './shared/modules/user/index.js';
 import { createOfferContainer } from './shared/modules/offer/index.js';
 
@@ -12,7 +12,7 @@ async function bootstrap() {
     createOfferContainer(),
   );
 
-  const application = appContainer.get<RestApplication>(Component.RestApplication);
+  const application = appContainer.get<RestApplication>(EComponent.RestApplication);
   await application.init();
 }
 

@@ -1,4 +1,4 @@
-export enum UserAccountType {
+export enum EUserAccountType {
   Common = 'regular',
   Pro = 'pro',
 }
@@ -8,5 +8,5 @@ export interface IUser {
   email: string;
   avatarUrl?: string;
   password: string;
-  accountType: UserAccountType;
+  accountType: string;
 }

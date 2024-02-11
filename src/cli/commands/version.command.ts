@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { ICommand } from './command.interface.js';
-import { Command } from '../../utils/const.js';
+import { ECommand } from '../../utils/const.js';
 import chalk from 'chalk';
 
 type PackageJSONConfig = {
@@ -32,7 +32,7 @@ export class VersionCommand implements ICommand {
   }
 
   public get name(): string {
-    return Command.VersionCommand;
+    return ECommand.VersionCommand;
   }
 
   public async execute(..._parameters: string[]): Promise<void> {

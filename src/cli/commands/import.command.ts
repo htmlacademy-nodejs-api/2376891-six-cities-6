@@ -2,16 +2,15 @@ import chalk from 'chalk';
 import { error } from 'console';
 import { ICommand } from './command.interface.js';
 import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
-import { createOffer, getErrorMessage, getMongoURI } from '../../shared/helpers/index.js';
-import { Command } from '../../utils/const.js';
+import { createMockOffer, getErrorMessage, getMongoURI, generatePassword } from '../../shared/helpers/index.js';
+import { ECommand, EPasswordLength } from '../../utils/const.js';
 import { UserService } from '../../shared/modules/user/user-service.interface.js';
 import { OfferModel, OfferService, DefaultOfferService } from '../../shared/modules/offer/index.js';
 import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
 import { Logger } from '../../shared/libs/logger/index.js';
 import { ConsoleLogger } from '../../shared/libs/logger/console.logger.js';
 import { DefaultUserService, UserModel } from '../../shared/modules/user/index.js';
-import { DEFAULT_DB_PORT, DEFAULT_USER_ACCOUNT_TYPE, DEFAULT_USER_EMAIL, DEFAULT_USER_NAME, DEFAULT_USER_PASSWORD } from './command.constant.js';
-import { TOffer } from '../../shared/types/index.js';
+import { TMockOffer } from '../../shared/types/index.js';
 
 export class ImportCommand implements ICommand {
   private userService: UserService;
@@ -31,7 +30,7 @@ export class ImportCommand implements ICommand {
   }
 
   private async onImportedLine(line: string, resolve: () => void) {
-    const offer = createOffer(line);
+    const offer = createMockOffer(line);
     await this.saveOffer(offer);
     resolve();
     console.info(offer);
@@ -42,13 +41,10 @@ export class ImportCommand implements ICommand {
     this.databaseClient.disconnect();
   }
 
-  private async saveOffer(offer: TOffer) {
+  private async saveOffer(offer: TMockOffer) {
     const user = await this.userService.findOrCreate({
-      ...offer.userId,
-      password: DEFAULT_USER_PASSWORD,
-      name: DEFAULT_USER_NAME,
-      email: DEFAULT_USER_EMAIL,
-      accountType: DEFAULT_USER_ACCOUNT_TYPE,
+      ...offer.user,
+      password: generatePassword(EPasswordLength.Min, EPasswordLength.Max),
     }, this.salt);
 
     await this.offerService.create({
@@ -61,24 +57,42 @@ export class ImportCommand implements ICommand {
       isPremium: offer.isPremium,
       isFavorite: offer.isFavorite,
       rating: offer.rating,
-      housingType: offer.housingType,
+      offerType: offer.offerType,
       bedrooms: offer.bedrooms,
       maxAdults: offer.maxAdults,
       price: offer.price,
       goods: offer.goods,
       userId: user.id,
-      comments: offer.comments,
+      commentCount: offer.commentCount,
       location: offer.location,
     });
   }
 
   public get name(): string {
-    return Command.ImportCommand;
+    return ECommand.ImportCommand;
   }
 
-  public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string): Promise<void> {
-    const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
-    this.salt = salt;
+  public async execute(
+    filename: string,
+    login: string | undefined = process.env.DB_USER,
+    password: string | undefined = process.env.DB_PASSWORD,
+    host: string | undefined = process.env.DB_HOST,
+    port: string | undefined = process.env.DB_PORT,
+    dbname: string | undefined = process.env.DB_NAME,
+    salt: string | undefined = process.env.SALT
+  ): Promise<void> {
+
+    const uri = getMongoURI(
+      login,
+      password,
+      host,
+      port,
+      dbname,
+    );
+
+    if (salt) {
+      this.salt = salt;
+    }
 
     await this.databaseClient.connect(uri);
 

@@ -1,5 +1,5 @@
 import { defaultClasses, getModelForClass, prop, modelOptions } from '@typegoose/typegoose';
-import { IUser, UserAccountType } from '../../types/index.js';
+import { IUser, EUserAccountType } from '../../types/index.js';
 import { createSHA256 } from '../../helpers/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -22,27 +22,20 @@ export class UserEntity extends defaultClasses.TimeStamps implements IUser {
   @prop({required: false, default: ''})
   public avatarUrl!: string | undefined;
 
-  @prop({required: true, minlength: [6, 'Min length for password is 6'], maxlength: [12, 'Max length for password is 12'], default: ''})
+  @prop({ required: true })
   public password!: string;
 
-  @prop({required: true, enum: [`${UserAccountType.Common}`, `${UserAccountType.Pro}`]})
-  public accountType!: UserAccountType;
+  @prop({ required: true, enum: [`${EUserAccountType.Common}`, `${EUserAccountType.Pro}`] })
+  public accountType!: string;
 
-  constructor(userData: IUser) {
+  constructor(userData: IUser, salt: string) {
     super();
 
     this.name = userData.name;
     this.email = userData.email;
     this.avatarUrl = userData.avatarUrl;
+    this.password = createSHA256(userData.password, salt);
     this.accountType = userData.accountType;
-  }
-
-  public setPassword(password: string, salt: string) {
-    this.password = createSHA256(password, salt);
-  }
-
-  public getPassword() {
-    return this.password;
   }
 }
 

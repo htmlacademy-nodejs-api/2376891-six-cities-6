@@ -1,10 +1,10 @@
 import { ICommand } from './command.interface.js';
-import { Command } from '../../utils/const.js';
+import { ECommand } from '../../utils/const.js';
 import chalk from 'chalk';
 
 export class HelpCommand implements ICommand {
   public get name(): string {
-    return Command.HelpCommand;
+    return ECommand.HelpCommand;
   }
 
   public async execute(..._parameters: string[]): Promise<void> {
