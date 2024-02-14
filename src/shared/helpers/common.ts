@@ -15,3 +15,15 @@ export function getRandomItem<T>(items: T[]): T {
 export function getErrorMessage(error: unknown): string {
   return error instanceof Error ? `Details: ${error.message}` : '';
 }
+
+export function generatePassword(min: number, max: number): string {
+  const symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!№;%:?*()_+=';
+  let password = '';
+
+  const passwordLength = generateRandomValue(min, max);
+  for (let i = 0; i < passwordLength; i++) {
+    password += symbols.charAt(Math.floor(Math.random() * symbols.length));
+  }
+
+  return password;
+}

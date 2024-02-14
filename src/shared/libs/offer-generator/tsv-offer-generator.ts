@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { OfferGenerator } from './offer-generator.interface.js';
-import { TMockServerData } from '../../types/index.js';
+import { TMockServerData, ELocation } from '../../types/index.js';
 import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/index.js';
-import { Rating, Bedrooms, Adults, Price, Comments, WeekDay, CityLocations } from '../../../utils/const.js';
+import { ERating, EBedrooms, EAdults, EPrice, EComments, EWeekDay } from '../../../utils/const.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(
@@ -12,34 +12,35 @@ export class TSVOfferGenerator implements OfferGenerator {
   public generate(): string {
     const title = getRandomItem<string>(this.mockData.titles);
     const description = getRandomItem<string>(this.mockData.descriptions);
-    const city = getRandomItem<string>(this.mockData.cities);
+    const cityIndex = generateRandomValue(0, this.mockData.cities.length - 1);
+    const city = this.mockData.cities[cityIndex];
     const previewImage = getRandomItem<string>(this.mockData.previewImages);
     const images = getRandomItems<string>(this.mockData.images).join(';');
     const isPremium = getRandomItem<string>(this.mockData.isPremium);
     const isFavorite = getRandomItem<string>(this.mockData.isFavorite);
-    const rating = generateRandomValue(Rating.Min, Rating.Max, 1);
-    const housingType = getRandomItem<string>(this.mockData.housingTypes);
-    const bedrooms = generateRandomValue(Bedrooms.Min, Bedrooms.Max);
-    const maxAdults = generateRandomValue(Adults.Min, Adults.Max);
-    const price = generateRandomValue(Price.Min, Price.Max);
+    const rating = generateRandomValue(ERating.Min, ERating.Max, 1);
+    const offerType = getRandomItem<string>(this.mockData.offerTypes);
+    const bedrooms = generateRandomValue(EBedrooms.Min, EBedrooms.Max);
+    const maxAdults = generateRandomValue(EAdults.Min, EAdults.Max);
+    const price = generateRandomValue(EPrice.Min, EPrice.Max);
     const goods = getRandomItems<string>(this.mockData.goods).join(';');
-    const host = getRandomItem<string>(this.mockData.users);
+    const user = getRandomItem<string>(this.mockData.users);
     const email = getRandomItem<string>(this.mockData.emails);
     const avatarUrl = getRandomItem<string>(this.mockData.avatarUrls);
     const password = getRandomItem<string>(this.mockData.passwords);
     const accountType = getRandomItem<string>(this.mockData.accountTypes);
-    const comments = generateRandomValue(Comments.Min, Comments.Max);
-    const cityLocation = CityLocations.find((location) => location.name === city);
-    const locationLatitude = cityLocation?.location.latitude;
-    const locationLongitude = cityLocation?.location.longitude;
+    const comments = generateRandomValue(EComments.Min, EComments.Max);
+    const cityLocation = Object.values(ELocation)[cityIndex];
+    const locationLatitude = cityLocation?.latitude;
+    const locationLongitude = cityLocation?.longitude;
 
     const createdDate = dayjs()
-      .subtract(generateRandomValue(WeekDay.First, WeekDay.Last), 'day')
+      .subtract(generateRandomValue(EWeekDay.First, EWeekDay.Last), 'day')
       .toISOString();
 
     return [
       title, description, createdDate, city, previewImage, images, isPremium, isFavorite, rating,
-      housingType, bedrooms, maxAdults, price, goods, host, email, avatarUrl, password, accountType,
+      offerType, bedrooms, maxAdults, price, goods, user, email, avatarUrl, password, accountType,
       comments, locationLatitude, locationLongitude
     ].join('\t');
   }

@@ -1,6 +1,6 @@
 import got from 'got';
 import { ICommand } from './command.interface.js';
-import { Command } from '../../utils/const.js';
+import { ECommand } from '../../utils/const.js';
 import { TMockServerData } from '../../shared/types/index.js';
 import { TSVOfferGenerator } from '../../shared/libs/offer-generator/index.js';
 import { getErrorMessage } from '../../shared/helpers/index.js';
@@ -27,7 +27,7 @@ export class GenerateCommand implements ICommand {
   }
 
   public get name(): string {
-    return Command.GenerateCommand;
+    return ECommand.GenerateCommand;
   }
 
   public async execute(...parameters: string[]): Promise<void> {

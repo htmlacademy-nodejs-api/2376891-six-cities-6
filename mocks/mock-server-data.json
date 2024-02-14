@@ -53,7 +53,7 @@
       "true",
       "false"
     ],
-    "housingTypes": [
+    "offerTypes": [
       "Apartment",
       "Room",
       "House",

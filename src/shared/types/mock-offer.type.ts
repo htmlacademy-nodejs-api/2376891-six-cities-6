@@ -1,11 +1,10 @@
-import { Ref } from '@typegoose/typegoose';
 import { TLocation } from './location.type.js';
 import { ECityName } from './city-name.enum.js';
 import { EOfferType } from './housing-type.enum.js';
 import { EGood } from './good.enum.js';
-import { UserEntity } from '../modules/user/index.js';
+import { IUser } from './user.type.js';
 
-export type TOffer = {
+export type TMockOffer = {
   title: string;
   description: string;
   date: Date;
@@ -20,7 +19,8 @@ export type TOffer = {
   maxAdults: number;
   price: number;
   goods: EGood[];
-  userId: Ref<UserEntity>;
+  user: IUser;
   commentCount: number;
   location: TLocation;
 }
+
