@@ -1,0 +1,622 @@
+openapi: 3.1.0
+info:
+  title: API сервер для проекта "Шесть городов".
+  description: |-
+    * Список ресурсов и маршрутов сервера "Шесть городов".
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+tags:
+  - name: offers
+    description: Действия с объявлениями.
+  - name: users
+    description: Действия с пользователем.
+  - name: comments
+    description: Действия с комментариями.
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Данные для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userAuth'
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля
+
+      requestBody:
+        description: Данные для авторизации пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth'
+        required: true
+
+      responses:
+        "200":
+          description: Пользователь авторизован. Токен пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/token'
+        "400":
+          description: Неверный пароль или логин или пользователь не существует.
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+
+      requestBody:
+        description: Данные для проверки состояния пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/token'
+        required: true
+
+      responses:
+        "200":
+          description: Пользователь авторизован. Объект кода состояния и пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userAuth'
+        "400":
+          description: Неверный логин или пароль.
+        "403":
+          description: Пользователь не авторизован.
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Завершение пользовательского сеанса
+      description: Завершает пользовательский сеанс.
+
+      requestBody:
+        description: Данные для завершения пользовательского сеанса.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/token'
+        required: true
+
+      responses:
+        "200":
+          description: Пользовательский сеанс завершен.
+        "403":
+          description: Не удалось завершить пользовательский сеанс.
+
+  /users/{userId}/favorites:
+    get:
+      tags:
+        - users
+      summary: Загрузка списка избранных предложений по аренде
+      description: Возвращает список предложений по аренде, добавленных в избранное.
+
+      requestBody:
+        description: Данные для загрузки списка предложений по аренде, добавленных в избранное.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/token'
+        required: true
+
+      responses:
+        "200":
+          description: Избранные предложения по аренде загружены. Список избранных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/previewOffer'
+        "403":
+          description: Избранные предложения по аренде доступны только авторизованным пользователям.
+    post:
+      tags:
+        - users
+      summary: Добавление предложения по аренде в избранное
+      description: Добавляет предложение в избранное.
+
+      requestBody:
+        description: Данные для добавления предложения по аренде в избранное.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offerId'
+        required: true
+
+      responses:
+        "204":
+          description: Предложение по аренде добавлено в избранное.
+        "403":
+          description: Нет прав для добавления предложение по аренде в избранное.
+    delete:
+      tags:
+        - users
+      summary: Удаление предложения по аренде из избранного
+      description: Удаляет предложение по аренде из избранного.
+
+      requestBody:
+        description: Данные для удаления предложения по аренде из избранного.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offerId'
+        required: true
+
+      responses:
+        "200":
+          description: Предложение по аренде удалено из избранного.
+        "403":
+          description: Нет прав для уаления предложение по аренде из избранного.
+
+  /offers:
+    get:
+      tags:
+        - offers
+      summary: Загрузка списка предложений по аренде
+      description: Возвращает список предложений по аренде
+
+      requestBody:
+        description: Данные для загрузки списка предложений по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offersCount'
+        required: false
+
+      responses:
+        "200":
+          description: Предложения загружены. Список предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/previewOffer'
+        "409":
+          description: Предложения не загружены.
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения по аренде
+      description: Создает новое предложение по аренде.
+
+      requestBody:
+        description: Данные для создания нового предложения по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "200":
+          description: Предложение создано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createOffer'
+        "403":
+          description: Валидация не пройдена. Предложение не создано.
+
+  /offers/{offerId}:
+    get:
+      tags:
+        - offers
+      summary: Загрузка детальной информации по предложению
+      description: Возвращает детальную информацию по предложению.
+
+      requestBody:
+        description: Данные для загрузки детальной информации по предложению.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/token'
+        required: true
+
+      responses:
+        "200":
+          description: Предложение по аренде успешно загружено.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createOffer'
+        "409":
+          description: Предложение не загружено.
+    patch:
+      tags:
+        - offers
+      summary: Редактирование предложения по аренде
+      description: Редактирует определенное предложение по аренде.
+
+      requestBody:
+        description: Данные для редактирования предложения по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/editOffer'
+        required: true
+
+      responses:
+        "200":
+          description: Предложение отредактировано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createOffer'
+        "403":
+          description: Нет прав для редактирования предложения по аренде.
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения по аренде
+      description: Удаляет определенное предложение по аренде.
+
+      requestBody:
+        description: Данные для удаления предложения по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/token'
+        required: true
+
+      responses:
+        "204":
+          description: Предложение по аренде удалено.
+        "403":
+          description: Нет прав для удаления этого предложения. Предложение по аренде не удалено.
+
+  /offers/premium:
+    get:
+      tags:
+        - offers
+      summary: Загрузка списка премиальных предложений по аренде для города
+      description: Возвращает список премиальных предложений по аренде для города.
+
+      requestBody:
+        description: Данные для загрузки списка премиальных предложений по аренде для города.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/city'
+        required: true
+
+      responses:
+        "200":
+          description: Премиальные предложения по аренде загружены.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/previewOffer'
+        "403":
+          description: Премиальные предложения не загружены.
+
+  /comments:
+    get:
+      tags:
+        - comments
+      summary: Загрузка списка комментариев для определенного предложения
+      description: Возвращает список комментариев для определенного предложения.
+
+      requestBody:
+        description: Данные для загрузки списка комментариев для определенного предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/token'
+        required: true
+
+      responses:
+        "200":
+          description: Комментарии загружены. Список комментариев.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+        "403":
+          description: Комментарии не загружены.
+    post:
+      tags:
+        - comments
+      summary: Добавление комментария
+      description: Добавляет комментарий к определенному предложению по аренде.
+
+      requestBody:
+        description: Данные для добавления комментария к определенному предложению по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newComment'
+        required: true
+
+      responses:
+        "201":
+          description: Комментарий добавлен. Объект комментария.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/comment'
+        "403":
+          description: Нет прав для создания комментария.
+
+components:
+  schemas:
+    createUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Keks
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+        avatar:
+          type: string
+          example: img/avatar-keks.jpg
+        password:
+          type: string
+          example: 123456
+        userType:
+          type: string
+          example: pro
+    userAuth:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Keks
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+        avatar:
+          type: string
+          example: img/avatar-keks.jpg
+        userType:
+          type: string
+          example: pro
+    auth:
+      type: object
+      properties:
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+        password:
+          type: string
+          example: 123456
+    token:
+      type: string
+      example: 6329c3d6a04ab1061c6425n
+    offerId:
+      type: string
+      example: 6329c3d6a04ab1061c6425nd
+    previewOffer:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Waterfront with extraordinary view
+        date:
+          type: string
+          example: 2023-09-09T09:23:20.316Z
+        city:
+          type: string
+          example: Amsterdam
+        previewImage:
+          type: string
+          example: https://14.react.pages.academy/static/offer/3.jpg
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: true
+        rating:
+          type: number
+          example: 4.1
+        offerType:
+          type: string
+          example: Apartment
+        price:
+          type: number
+          example: 500
+        commentCount:
+          type: number
+          example: 5
+    createOffer:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Waterfront with extraordinary view
+        description:
+          type: string
+          example: Design interior in most sympathetic area!
+        date:
+          type: string
+          example: 2023-09-09T09:23:20.316Z
+        city:
+          type: string
+          example: Amsterdam
+        previewImage:
+          type: string
+          example: https://14.react.pages.academy/static/offer/3.jpg
+        images:
+          type: array
+          example: [
+            https://14.react.pages.academy/static/offer/8.jpg,
+            https://14.react.pages.academy/static/offer/7.jpg,
+            https://14.react.pages.academy/static/offer/17.jpg
+          ]
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: true
+        rating:
+          type: number
+          example: 4.1
+        offerType:
+          type: string
+          example: Apartment
+        bedrooms:
+          type: number
+          example: 3
+        maxAdults:
+          type: number
+          example: 4
+        price:
+          type: number
+          example: 500
+        goods:
+          type: array
+          example: [Breakfast;Air conditioning;Fridge;Washer]
+        author:
+          type: object
+          $ref: '#/components/schemas/createUser'
+        commentCount:
+          type: number
+          example: 5
+        location:
+          type: object
+          $ref: '#/components/schemas/location'
+    editOffer:
+      type: object
+      properties:
+        offerId:
+          type: string
+          example: 6329c3d6a04ab1061c6425nd
+        title:
+          type: string
+          example: Waterfront with extraordinary view
+        description:
+          type: string
+          example: Design interior in most sympathetic area!
+        date:
+          type: string
+          example: 2023-09-09T09:23:20.316Z
+        city:
+          type: string
+          example: Amsterdam
+        previewImage:
+          type: string
+          example: https://14.react.pages.academy/static/offer/3.jpg
+        images:
+          type: array
+          example: [
+            https://14.react.pages.academy/static/offer/8.jpg,
+            https://14.react.pages.academy/static/offer/7.jpg,
+            https://14.react.pages.academy/static/offer/17.jpg
+          ]
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: true
+        rating:
+          type: number
+          example: 4.1
+        offerType:
+          type: string
+          example: Apartment
+        bedrooms:
+          type: number
+          example: 3
+        maxAdults:
+          type: number
+          example: 4
+        price:
+          type: number
+          example: 500
+        goods:
+          type: array
+          example: [Breakfast;Air conditioning;Fridge;Washer]
+        author:
+          type: object
+          $ref: '#/components/schemas/createUser'
+        commentCount:
+          type: number
+          example: 5
+        location:
+          type: object
+          $ref: '#/components/schemas/location'
+    comment:
+      type: object
+      properties:
+        text:
+          type: string
+          example: Waterfront with extraordinary view
+        date:
+          type: string
+          example: 2023-09-09T09:23:20.316Z
+        rating:
+          type: number
+          example: 2
+        userId:
+          type: string
+          example: 6329c3d6a04ab1061c6425nd
+    newComment:
+      type: object
+
+      properties:
+        text:
+          type: string
+          example: Waterfront with extraordinary view
+
+        rating:
+          type: number
+          example: 2
+
+        userId:
+          type: string
+          example: 6329c3d6a04ab1061c6425nd
+    city:
+      type: object
+
+      properties:
+        cityName: string
+        example: Amsterdam
+    location:
+      type: object
+      properties:
+        latitude:
+          type: string
+          example: '48.85661'
+        longitude:
+          type: string
+          example: '2.351499'
