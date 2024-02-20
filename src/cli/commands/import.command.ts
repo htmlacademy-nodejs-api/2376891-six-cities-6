@@ -5,11 +5,10 @@ import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
 import { createMockOffer, getErrorMessage, getMongoURI, generatePassword } from '../../shared/helpers/index.js';
 import { ECommand, EPasswordLength } from '../../utils/const.js';
 import { UserService } from '../../shared/modules/user/user-service.interface.js';
-import { OfferModel, OfferService, DefaultOfferService } from '../../shared/modules/offer/index.js';
+import { OfferModel, OfferService, DefaultOfferService, DefaultUserService, UserModel } from '../../shared/modules/index.js';
 import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
 import { Logger } from '../../shared/libs/logger/index.js';
 import { ConsoleLogger } from '../../shared/libs/logger/console.logger.js';
-import { DefaultUserService, UserModel } from '../../shared/modules/user/index.js';
 import { TMockOffer } from '../../shared/types/index.js';
 
 export class ImportCommand implements ICommand {

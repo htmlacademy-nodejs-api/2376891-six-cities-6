@@ -5,8 +5,9 @@ import { RestApplication } from './index.js';
 import { Config, RestConfig, RestSchema } from '../shared/libs/config/index.js';
 import { EComponent } from '../shared/types/component.enum.js';
 import { DatabaseClient, MongoDatabaseClient } from '../shared/libs/database-client/index.js';
+import { createUserContainer, createOfferContainer, createCommentContainer } from '../shared/modules/index.js';
 
-export function createRestApplicationContainer() {
+function createRestApplicationContainer() {
   const restApplicationContainer = new Container();
 
   restApplicationContainer.bind<RestApplication>(EComponent.RestApplication).to(RestApplication).inSingletonScope();
@@ -16,3 +17,10 @@ export function createRestApplicationContainer() {
 
   return restApplicationContainer;
 }
+
+export const getRestApplicationContainer = () => Container.merge(
+  createRestApplicationContainer(),
+  createUserContainer(),
+  createOfferContainer(),
+  createCommentContainer(),
+);

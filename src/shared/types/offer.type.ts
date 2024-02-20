@@ -1,9 +1,6 @@
 import { Ref } from '@typegoose/typegoose';
-import { TLocation } from './location.type.js';
-import { ECityName } from './city-name.enum.js';
-import { EOfferType } from './housing-type.enum.js';
-import { EGood } from './good.enum.js';
-import { UserEntity } from '../modules/user/index.js';
+import { TLocation, ECityName, EOfferType, EGood } from './index.js';
+import { UserEntity } from '../modules/index.js';
 
 export type TOffer = {
   title: string;
