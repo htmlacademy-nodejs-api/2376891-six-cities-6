@@ -1,4 +1,4 @@
-import { Ref, defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
+import { Ref, defaultClasses, modelOptions, prop } from '@typegoose/typegoose';
 import { ECityName, EGood, EOfferType as EOfferType, TLocation, TOffer } from '../../types/index.js';
 import { UserEntity } from '../user/user.entity.js';
 
@@ -14,10 +14,10 @@ export interface OfferEntity extends defaultClasses.Base { }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class OfferEntity extends defaultClasses.TimeStamps {
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: () => String })
   public title!: string;
 
-  @prop({ required: true, trim: true })
+  @prop({ required: true, trim: true, type: () => String })
   public description!: string;
 
   @prop({ required: true })
@@ -26,28 +26,28 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, type: () => String })
   public city!: ECityName;
 
-  @prop({ required: true })
+  @prop({ required: true, type: () => String })
   public previewImage!: string;
 
   @prop({ required: true })
   public images!: string[];
 
-  @prop({ required: true })
+  @prop({ required: true, type: () => Boolean })
   public isPremium!: boolean;
 
-  @prop({ required: true })
+  @prop({ required: true, type: () => Number })
   public rating!: number;
 
   @prop({ required: true, type: () => String })
   public offerType!: EOfferType;
 
-  @prop({ required: true })
+  @prop({ required: true, type: () => Number })
   public bedrooms!: number;
 
-  @prop({ required: true })
+  @prop({ required: true, type: () => Number })
   public maxAdults!: number;
 
-  @prop({ required: true })
+  @prop({ required: true, type: () => Number })
   public price!: number;
 
   @prop({ required: true, type: () => String })
@@ -56,7 +56,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, ref: () => UserEntity, _id: false })
   public userId!: Ref<UserEntity>;
 
-  @prop({ required: false, default: 0 })
+  @prop({ required: false, default: 0, type: () => Number })
   public commentCount!: number;
 
   @prop({ required: true })
@@ -83,5 +83,3 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     this.location = offerData.location;
   }
 }
-
-export const OfferModel = getModelForClass(OfferEntity);
