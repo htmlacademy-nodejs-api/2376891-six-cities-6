@@ -59,7 +59,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: false, default: 0, type: () => Number })
   public commentCount!: number;
 
-  @prop({ required: true, type: () => String })
+  @prop({ required: true })
   public location!: TLocation;
 
   constructor(offerData: TOffer) {

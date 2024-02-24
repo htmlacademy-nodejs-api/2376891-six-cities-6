@@ -49,10 +49,6 @@
       "true",
       "false"
     ],
-    "isFavorite": [
-      "true",
-      "false"
-    ],
     "offerTypes": [
       "Apartment",
       "Room",
@@ -89,13 +85,6 @@
       "awesome-avatar.jpg",
       "roland.jpg",
       "smite.jpg"
-    ],
-    "passwords": [
-      "111111",
-      "222222",
-      "333333",
-      "444444",
-      "555555"
     ],
     "accountTypes": [
       "pro",

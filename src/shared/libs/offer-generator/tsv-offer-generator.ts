@@ -17,7 +17,6 @@ export class TSVOfferGenerator implements OfferGenerator {
     const previewImage = getRandomItem<string>(this.mockData.previewImages);
     const images = getRandomItems<string>(this.mockData.images).join(';');
     const isPremium = getRandomItem<string>(this.mockData.isPremium);
-    const isFavorite = getRandomItem<string>(this.mockData.isFavorite);
     const rating = generateRandomValue(ERating.Min, ERating.Max, 1);
     const offerType = getRandomItem<string>(this.mockData.offerTypes);
     const bedrooms = generateRandomValue(EBedrooms.Min, EBedrooms.Max);
@@ -27,7 +26,6 @@ export class TSVOfferGenerator implements OfferGenerator {
     const user = getRandomItem<string>(this.mockData.users);
     const email = getRandomItem<string>(this.mockData.emails);
     const avatarUrl = getRandomItem<string>(this.mockData.avatarUrls);
-    const password = getRandomItem<string>(this.mockData.passwords);
     const accountType = getRandomItem<string>(this.mockData.accountTypes);
     const comments = generateRandomValue(EComments.Min, EComments.Max);
     const cityLocation = Object.values(ELocation)[cityIndex];
@@ -39,9 +37,9 @@ export class TSVOfferGenerator implements OfferGenerator {
       .toISOString();
 
     return [
-      title, description, createdDate, city, previewImage, images, isPremium, isFavorite, rating,
-      offerType, bedrooms, maxAdults, price, goods, user, email, avatarUrl, password, accountType,
-      comments, locationLatitude, locationLongitude
+      title, description, createdDate, city, previewImage, images, isPremium,
+      rating, offerType, bedrooms, maxAdults, price, goods, user, email, avatarUrl,
+      accountType, comments, locationLatitude, locationLongitude
     ].join('\t');
   }
 }

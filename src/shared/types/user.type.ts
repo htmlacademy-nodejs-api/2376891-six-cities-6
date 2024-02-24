@@ -9,4 +9,5 @@ export interface IUser {
   avatarUrl?: string;
   password: string;
   accountType: string;
+  favorites: string[];
 }
