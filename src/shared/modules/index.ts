@@ -10,6 +10,7 @@ export * from './user/user-service.interface.js';
 export * from './user/user.container.js';
 export * from './user/default-user.service.js';
 export * from './user/user.container.js';
+export * from './user/user.controller.js';
 export * from './comment/comment-service.interface.js';
 export * from './comment//comment.container.js';
 export * from './comment/comment.entity.js';
