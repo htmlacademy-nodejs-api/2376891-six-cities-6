@@ -33,7 +33,7 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async find(userId: string, offerCount?: number): Promise<DocumentType<OfferEntity>[]> {
+  public async find(userId?: string, offerCount?: number): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .aggregate([
         { $sort: { createdAt: ESortType.Down } },
