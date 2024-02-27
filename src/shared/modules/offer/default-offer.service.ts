@@ -84,6 +84,10 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.offerModel.exists({ _id: documentId })) !== null;
+  }
+
   public async findPremium(city: string): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find({ city })

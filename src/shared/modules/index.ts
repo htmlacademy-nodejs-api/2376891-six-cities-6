@@ -16,4 +16,6 @@ export * from './comment/comment-service.interface.js';
 export * from './comment//comment.container.js';
 export * from './comment/comment.entity.js';
 export * from './comment/default-comment.service.js';
+export * from './comment/dto/create-comment.dto.js';
+export * from './comment/rdo/comment.rdo.js';
 export * from './models.js';

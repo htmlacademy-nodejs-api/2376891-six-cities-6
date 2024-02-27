@@ -10,12 +10,14 @@ import { fillDTO } from '../../helpers/common.js';
 import { OfferRdo } from './rdo/offer.rdo.js';
 import { TCreateOfferRequest } from './type/create-offer-request.type.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
+import { CommentRdo, CommentService } from '../index.js';
 
 @injectable()
 export default class OfferController extends BaseController {
   constructor(
-    @inject(EComponent.Logger) logger: Logger,
+    @inject(EComponent.Logger) protected logger: Logger,
     @inject(EComponent.OfferService) private readonly offerService: OfferService,
+    @inject(EComponent.CommentService) private readonly commentService: CommentService,
   ) {
     super(logger);
 
@@ -25,6 +27,7 @@ export default class OfferController extends BaseController {
     this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/:offerId', method: HttpMethod.Delete, handler: this.delete });
     this.addRoute({ path: '/:offerId', method: HttpMethod.Patch, handler: this.update });
+    this.addRoute({ path: '/:offerId/comments', method: HttpMethod.Get, handler: this.getComments });
   }
 
   public async show({ params }: Request<TParamOfferId>, res: Response): Promise<void> {
@@ -64,6 +67,8 @@ export default class OfferController extends BaseController {
       );
     }
 
+    await this.commentService.deleteByOfferId(offerId);
+
     this.noContent(res, offer);
   }
 
@@ -79,5 +84,18 @@ export default class OfferController extends BaseController {
     }
 
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
+  }
+
+  public async getComments({ params }: Request<TParamOfferId>, res: Response): Promise<void> {
+    if (! await this.offerService.exists(params.offerId)) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${params.offerId} not found.`,
+        'OfferController'
+      );
+    }
+
+    const comments = await this.commentService.findByOfferId(params.offerId);
+    this.ok(res, fillDTO(CommentRdo, comments));
   }
 }
