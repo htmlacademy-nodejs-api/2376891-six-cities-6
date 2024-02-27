@@ -9,3 +9,4 @@ export * from './types/request.params.type.js';
 export * from './errors/index.js';
 export * from './middleware/middleware.interface.js';
 export * from './middleware/validate-objectId.middleware.js';
+export * from './middleware/validate-dto.middleware.js';

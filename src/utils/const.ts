@@ -1,4 +1,15 @@
 export const LOG_FILE_PATH = 'logs/rest.log';
+export const IMAGE_COUNT = 6;
+
+export enum ETitleConstraint {
+  Min = 10,
+  Max = 100
+}
+
+export enum EDescriptionConstraint {
+  Min = 20,
+  Max = 1024
+}
 
 export enum ERating {
   Min = 1,
@@ -18,6 +29,11 @@ export enum EAdults {
 export enum EPrice {
   Min = 100,
   Max = 100000,
+}
+
+export enum EUserNameConstraint {
+  Min = 1,
+  Max = 15
 }
 
 export enum EComments {

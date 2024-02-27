@@ -19,7 +19,14 @@ Content-Type: application/json
   "date": "2023-09-26T09:23:20.316Z",
   "city": "Amsterdam",
   "previewImage": "https://14.react.pages.academy/static/offer/3.jpg",
-  "images": ["https://14.react.pages.academy/static/offer/8.jpg", "https://14.react.pages.academy/static/offer/7.jpg"],
+  "images": [
+    "https://14.react.pages.academy/static/offer/8.jpg",
+    "https://14.react.pages.academy/static/offer/7.jpg",
+    "https://14.react.pages.academy/static/offer/6.jpg",
+    "https://14.react.pages.academy/static/offer/5.jpg",
+    "https://14.react.pages.academy/static/offer/4.jpg",
+    "https://14.react.pages.academy/static/offer/3.jpg"
+    ],
   "isPremium": true,
   "rating": 4.1,
   "offerType": "Apartment",

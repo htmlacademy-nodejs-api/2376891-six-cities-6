@@ -5,6 +5,7 @@ export * from './offer/default-offer.service.js';
 export * from './offer/offer.container.js';
 export * from './offer/offer.constant.js';
 export * from './offer/rdo/offer.rdo.js';
+export * from './offer/dto/create-offer.messages.js';
 export * from './user/user.entity.js';
 export * from './user/dto/create-user.dto.js';
 export * from './user/user-service.interface.js';
