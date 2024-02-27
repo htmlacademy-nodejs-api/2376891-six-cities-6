@@ -1,4 +1,4 @@
-import { IsArray, IsEmail, IsEnum, IsString, IsUrl, Length, Matches, MinLength } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsString, IsUrl, Length, Matches } from 'class-validator';
 import { EPasswordLength, EUserNameConstraint } from '../../../../utils/const.js';
 import { CreateUserMessages } from './create-user.messages.js';
 import { EUserAccountType } from '../../../types/user.type.js';

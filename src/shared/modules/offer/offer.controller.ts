@@ -1,9 +1,8 @@
 import { inject, injectable } from 'inversify';
-import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpMethod, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { EComponent } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import { OfferService } from './offer-service.interface.js';
 import { TParamOfferId } from './type/param-offerId.type.js';
 import { TParamCity } from './type/param-city.type.js';

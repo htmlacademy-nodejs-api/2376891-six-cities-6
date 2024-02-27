@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDateString, IsEnum, IsIn, IsInt, IsLatitude, IsLongitude, IsMongoId, IsObject, IsOptional, IsUrl, Length, Matches, Max, Min } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDateString, IsEnum, IsInt, IsLatitude, IsLongitude, IsMongoId, IsObject, IsOptional, IsUrl, Length, Matches, Max, Min } from 'class-validator';
 import { EAdults, EBedrooms, EDescriptionConstraint, EPrice, ETitleConstraint, IMAGE_COUNT } from '../../../../utils/const.js';
 import { ECityName, EOfferType, EGood, TLocation } from '../../../types/index.js';
 import { CreateUpdateOfferMessage } from './update-offer.messages.js';
