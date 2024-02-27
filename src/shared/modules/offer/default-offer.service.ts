@@ -33,7 +33,7 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async find(userId: string, offerCount?: number): Promise<DocumentType<OfferEntity>[]> {
+  public async find(userId?: string, offerCount?: number): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .aggregate([
         { $sort: { createdAt: ESortType.Down } },
@@ -82,6 +82,10 @@ export class DefaultOfferService implements OfferService {
       .findByIdAndUpdate(offerId, dto, {new: true})
       .populate(['userId'])
       .exec();
+  }
+
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.offerModel.exists({ _id: documentId })) !== null;
   }
 
   public async findPremium(city: string): Promise<DocumentType<OfferEntity>[]> {
