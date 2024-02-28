@@ -1,49 +1,27 @@
 export const LOG_FILE_PATH = 'logs/rest.log';
-export const IMAGE_COUNT = 6;
 
-export enum ETitleConstraint {
-  Min = 10,
-  Max = 100
-}
+export const OfferDtoConstraint = {
+  Title: { Min: 10, Max: 100 },
+  Description: { Min: 20, Max: 1024 },
+  Bedrooms: { Min: 1, Max: 8 },
+  Adults: { Min: 1, Max: 10 },
+  Price: { Min: 100, Max: 100000 },
+  Images: 6,
+} as const;
 
-export enum EDescriptionConstraint {
-  Min = 20,
-  Max = 1024
-}
+export const UserDtoConstraint = {
+  Name: { Min: 1, Max: 15 },
+  Password: { Min: 6, Max: 12 },
+} as const ;
 
-export enum ERating {
+export enum ERatingConstraint {
   Min = 1,
   Max = 5,
 }
 
-export enum EBedrooms {
-  Min = 1,
-  Max = 8,
-}
-
-export enum EAdults {
-  Min = 1,
-  Max = 10,
-}
-
-export enum EPrice {
-  Min = 100,
-  Max = 100000,
-}
-
-export enum EUserNameConstraint {
-  Min = 1,
-  Max = 15
-}
-
-export enum EComments {
+export enum ECommentsConstraint {
   Min = 0,
   Max = 20,
-}
-
-export enum EPasswordLength {
-  Min = 6,
-  Max = 12,
 }
 
 export enum EWeekDay {

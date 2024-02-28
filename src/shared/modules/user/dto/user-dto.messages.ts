@@ -1,4 +1,4 @@
-export const CreateUserMessages = {
+export const UserDtoMessages = {
   name: {
     invalidFormat: 'Name is required.',
     lengthField: 'min length is 1, max is 15',
@@ -16,7 +16,7 @@ export const CreateUserMessages = {
   accountType: {
     invalid: 'AccountType must be regular and pro.',
   },
-  favorites: {
-    invalidFormat: 'Favorites must be an array.'
-  },
+  // favorites: {
+  //   invalidFormat: 'Favorites must be an array.'
+  // },
 } as const;

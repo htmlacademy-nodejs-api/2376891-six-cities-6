@@ -10,7 +10,7 @@ const DEFAULT_CONTENT_TYPE = 'application/json';
 
 @injectable()
 export abstract class BaseController implements Controller {
-  private readonly _router: Router;
+  protected readonly _router: Router;
 
   constructor(
     protected readonly logger: Logger

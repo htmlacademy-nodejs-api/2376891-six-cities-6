@@ -1,7 +1,7 @@
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDateString, IsEnum, IsInt, IsLatitude, IsLongitude, IsMongoId, IsObject, IsOptional, IsUrl, Length, Matches, Max, Min } from 'class-validator';
-import { EAdults, EBedrooms, EDescriptionConstraint, EPrice, ETitleConstraint, IMAGE_COUNT } from '../../../../utils/const.js';
+import { OfferDtoConstraint } from '../../../../utils/const.js';
 import { ECityName, EOfferType, EGood, TLocation } from '../../../types/index.js';
-import { CreateUpdateOfferMessage } from './update-offer.messages.js';
+import { OfferDtoValidationMessages } from './offer-dto.messages.js';
 import { Type } from 'class-transformer';
 
 class Location {
@@ -14,73 +14,73 @@ class Location {
 
 export class UpdateOfferDto {
   @IsOptional()
-  @Length(ETitleConstraint.Min, ETitleConstraint.Max, { message: CreateUpdateOfferMessage.title.minLength })
+  @Length(OfferDtoConstraint.Title.Min, OfferDtoConstraint.Title.Max, { message: OfferDtoValidationMessages.title.minLength })
   public title?: string;
 
   @IsOptional()
-  @Length(EDescriptionConstraint.Min, EDescriptionConstraint.Max, { message: CreateUpdateOfferMessage.description.minLength })
+  @Length(OfferDtoConstraint.Description.Min, OfferDtoConstraint.Description.Max, { message: OfferDtoValidationMessages.description.minLength })
   public description?: string;
 
   @IsOptional()
-  @IsDateString({}, {message: CreateUpdateOfferMessage.date.invalidFormat})
+  @IsDateString({}, {message: OfferDtoValidationMessages.date.invalidFormat})
   public date?: Date;
 
   @IsOptional()
-  @IsEnum(ECityName, {message: CreateUpdateOfferMessage.city.invalid})
+  @IsEnum(ECityName, {message: OfferDtoValidationMessages.city.invalid})
   public city?: ECityName;
 
   @IsOptional()
-  @IsUrl({ message: CreateUpdateOfferMessage.previewImage.invalid })
+  @IsUrl({ message: OfferDtoValidationMessages.previewImage.invalid })
   @Matches(/\.(jpg|png)(\?.*)?$/i)
   public previewImage?: string;
 
   @IsOptional()
-  @IsArray({ message: CreateUpdateOfferMessage.images.invalidFormat })
-  @ArrayMinSize(IMAGE_COUNT, {message: CreateUpdateOfferMessage.images.invalid})
-  @ArrayMaxSize(IMAGE_COUNT, {message: CreateUpdateOfferMessage.images.invalid})
+  @IsArray({ message: OfferDtoValidationMessages.images.invalidFormat })
+  @ArrayMinSize(OfferDtoConstraint.Images, {message: OfferDtoValidationMessages.images.invalid})
+  @ArrayMaxSize(OfferDtoConstraint.Images, {message: OfferDtoValidationMessages.images.invalid})
   public images?: string[];
 
   @IsOptional()
-  @IsBoolean({message: CreateUpdateOfferMessage.isPremium.invalidFormat})
+  @IsBoolean({message: OfferDtoValidationMessages.isPremium.invalidFormat})
   public isPremium?: boolean;
 
   @IsOptional()
-  @IsEnum(EOfferType, {message: CreateUpdateOfferMessage.offerType.invalid})
+  @IsEnum(EOfferType, {message: OfferDtoValidationMessages.offerType.invalid})
   public offerType?: EOfferType;
 
   @IsOptional()
-  @IsInt({ message: CreateUpdateOfferMessage.bedrooms.invalidFormat })
-  @Min(EBedrooms.Min)
-  @Max(EBedrooms.Max)
+  @IsInt({ message: OfferDtoValidationMessages.bedrooms.invalidFormat })
+  @Min(OfferDtoConstraint.Bedrooms.Min)
+  @Max(OfferDtoConstraint.Bedrooms.Max)
   public bedrooms?: number;
 
   @IsOptional()
-  @IsInt({ message: CreateUpdateOfferMessage.maxAdults.invalidFormat })
-  @Min(EAdults.Min)
-  @Max(EAdults.Max)
+  @IsInt({ message: OfferDtoValidationMessages.maxAdults.invalidFormat })
+  @Min(OfferDtoConstraint.Adults.Min)
+  @Max(OfferDtoConstraint.Adults.Max)
   public maxAdults?: number;
 
   @IsOptional()
-  @IsInt({ message: CreateUpdateOfferMessage.price.invalidFormat })
-  @Min(EPrice.Min, { message: CreateUpdateOfferMessage.price.minValue })
-  @Max(EPrice.Max, {message: CreateUpdateOfferMessage.price.maxValue})
+  @IsInt({ message: OfferDtoValidationMessages.price.invalidFormat })
+  @Min(OfferDtoConstraint.Price.Min, { message: OfferDtoValidationMessages.price.minValue })
+  @Max(OfferDtoConstraint.Price.Max, {message: OfferDtoValidationMessages.price.maxValue})
   public price?: number;
 
   @IsOptional()
-  @IsArray({message: CreateUpdateOfferMessage.goods.invalidFormat})
-  @IsEnum(EGood, { each: true, message: CreateUpdateOfferMessage.goods.invalid })
+  @IsArray({message: OfferDtoValidationMessages.goods.invalidFormat})
+  @IsEnum(EGood, { each: true, message: OfferDtoValidationMessages.goods.invalid })
   public goods?: EGood[];
 
   @IsOptional()
-  @IsMongoId({message: CreateUpdateOfferMessage.userId.invalidId})
+  @IsMongoId({message: OfferDtoValidationMessages.userId.invalidId})
   public userId?: string;
 
   @IsOptional()
-  @IsInt({message: CreateUpdateOfferMessage.commentCount.invalidFormat})
+  @IsInt({message: OfferDtoValidationMessages.commentCount.invalidFormat})
   public commentCount?: number;
 
   @IsOptional()
-  @IsObject({ message: CreateUpdateOfferMessage.location.invalid })
+  @IsObject({ message: OfferDtoValidationMessages.location.invalid })
   @Type(() => Location)
   public location?: TLocation;
 }

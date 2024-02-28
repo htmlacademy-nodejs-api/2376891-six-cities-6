@@ -1,27 +1,27 @@
-import { IsArray, IsEmail, IsEnum, IsString, IsUrl, Length, Matches } from 'class-validator';
-import { EPasswordLength, EUserNameConstraint } from '../../../../utils/const.js';
-import { CreateUserMessages } from './create-user.messages.js';
+import { IsEmail, IsEnum, IsString, IsUrl, Length, Matches } from 'class-validator';
+import { UserDtoConstraint } from '../../../../utils/const.js';
+import { UserDtoMessages } from './user-dto.messages.js';
 import { EUserAccountType } from '../../../types/user.type.js';
 
 export class CreateUserDto {
-  @IsString({ message: CreateUserMessages.name.invalidFormat })
-  @Length(EUserNameConstraint.Min, EUserNameConstraint.Max, { message: CreateUserMessages.name.lengthField })
+  @IsString({ message: UserDtoMessages.name.invalidFormat })
+  @Length(UserDtoConstraint.Name.Min, UserDtoConstraint.Name.Max, { message: UserDtoMessages.name.lengthField })
   public name!: string;
 
-  @IsEmail({}, {message: CreateUserMessages.email.invalidFormat})
+  @IsEmail({}, {message: UserDtoMessages.email.invalidFormat})
   public email!: string;
 
-  @IsUrl({ message: CreateUserMessages.avatarUrl.invalidFormat })
+  @IsUrl({ message: UserDtoMessages.avatarUrl.invalidFormat })
   @Matches(/\.(jpg|png)(\?.*)?$/i)
   public avatarUrl?: string;
 
-  @IsString({ message: CreateUserMessages.password.invalidFormat })
-  @Length(EPasswordLength.Min, EPasswordLength.Max, {message: CreateUserMessages.password.lengthField})
+  @IsString({ message: UserDtoMessages.password.invalidFormat })
+  @Length(UserDtoConstraint.Password.Min, UserDtoConstraint.Password.Max, {message: UserDtoMessages.password.lengthField})
   public password!: string;
 
-  @IsEnum(EUserAccountType, {message: CreateUserMessages.accountType.invalid})
+  @IsEnum(EUserAccountType, {message: UserDtoMessages.accountType.invalid})
   public accountType!: EUserAccountType;
 
-  @IsArray({message: CreateUserMessages.favorites.invalidFormat})
-  public favorites!: string[];
+  // @IsArray({message: CreateUserMessages.favorites.invalidFormat})
+  // public favorites!: string[];
 }

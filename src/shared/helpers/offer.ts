@@ -13,7 +13,7 @@ export function createMockOffer(offerData: string): TMockOffer {
     avatarUrl,
     password: '',
     accountType: accountType as EUserAccountType,
-    favorites: []
+    // favorites: []
   };
 
   const location = {
