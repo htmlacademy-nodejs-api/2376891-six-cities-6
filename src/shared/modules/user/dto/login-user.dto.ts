@@ -1,12 +1,12 @@
 import { IsEmail, IsString, Length } from 'class-validator';
-import { EPasswordLength } from '../../../../utils/const.js';
-import { CreateLoginUserMessage } from './login-user.messages.js';
+import { UserDtoMessages } from './user-dto.messages.js';
+import { UserDtoConstraint } from '../../../../utils/const.js';
 
 export class LoginUserDto {
-  @IsEmail({}, {message: CreateLoginUserMessage.email.invalidFormat})
+  @IsEmail({}, {message: UserDtoMessages.email.invalidFormat})
   public email!: string;
 
-  @IsString({ message: CreateLoginUserMessage.password.invalidFormat })
-  @Length(EPasswordLength.Min, EPasswordLength.Max, {message: CreateLoginUserMessage.password.lengthField})
+  @IsString({ message: UserDtoMessages.password.invalidFormat })
+  @Length(UserDtoConstraint.Password.Min, UserDtoConstraint.Password.Max, {message: UserDtoMessages.password.lengthField})
   public password!: string;
 }

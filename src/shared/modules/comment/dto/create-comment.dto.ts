@@ -1,6 +1,6 @@
 import { IsInt, IsMongoId, IsString, Length, Max, Min } from 'class-validator';
 import { CreateCommentMessages } from './create-comment.messages.js';
-import { ERating } from '../../../../utils/const.js';
+import { ERatingConstraint } from '../../../../utils/const.js';
 
 export class CreateCommentDto {
   @IsString({ message: CreateCommentMessages.text.invalidFormat })
@@ -11,8 +11,8 @@ export class CreateCommentDto {
   public offerId!: string;
 
   @IsInt({ message: CreateCommentMessages.rating.invalidFormat })
-  @Min(ERating.Min)
-  @Max(ERating.Max)
+  @Min(ERatingConstraint.Min)
+  @Max(ERatingConstraint.Max)
   public rating!: number;
 
   @IsMongoId({ message: CreateCommentMessages.userId.invalidFormat })

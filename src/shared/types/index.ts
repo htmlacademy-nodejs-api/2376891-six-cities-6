@@ -10,3 +10,4 @@ export * from './location.enum.js';
 export * from './mock-offer.type.js';
 export * from './sort-type.enum.js';
 export * from './user.unique-query.type.js';
+export * from './document-exists.interface.js';
