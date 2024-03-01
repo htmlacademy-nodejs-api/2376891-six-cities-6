@@ -8,5 +8,5 @@ export interface UserService {
   create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>>;
   findUnique(data: TUniqueQuery): Promise<DocumentType<UserEntity> | null>;
   findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>>;
-  updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null>;
+  updateById(userId: string | undefined, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null>;
 }

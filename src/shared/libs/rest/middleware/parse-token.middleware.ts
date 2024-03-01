@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { TTokenPayload } from '../../../modules/auth/index.js';
-import { EUserAccountType } from '../../../types/user.type.js';
 import { Middleware } from './middleware.interface.js';
 import { jwtVerify } from 'jose';
 import { createSecretKey } from 'node:crypto';
@@ -11,10 +10,7 @@ function isTokenPayload(payload: unknown): payload is TTokenPayload {
   return (
     (typeof payload === 'object' && payload !== null) &&
     ('id' in payload && typeof payload.id === 'string') &&
-    ('name' in payload && typeof payload.name === 'string') &&
-    ('email' in payload && typeof payload.email === 'string') &&
-    ('avatarUrl' in payload && typeof payload.avatarUrl === 'string') &&
-    ('accountType' in payload && typeof payload.accountType === typeof EUserAccountType)
+    ('email' in payload && typeof payload.email === 'string')
   );
 }
 

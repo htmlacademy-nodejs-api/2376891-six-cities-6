@@ -1,10 +1,8 @@
 import { Expose, Type } from 'class-transformer';
 import { OfferRdo } from '../../index.js';
+import { UserRdo } from '../../user/rdo/user.rdo.js';
 
 export class CommentRdo {
-  // @Expose()
-  // public id!: string;
-
   @Expose()
   public text!: string;
 
@@ -13,8 +11,8 @@ export class CommentRdo {
   public offer!: OfferRdo;
 
   @Expose({ name: 'userId' })
-  @Type(() => OfferRdo)
-  public user!: OfferRdo;
+  @Type(() => UserRdo)
+  public user!: UserRdo;
 
   @Expose({name: 'createdAt'})
   public date!: string;

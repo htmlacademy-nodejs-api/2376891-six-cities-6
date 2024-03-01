@@ -1,22 +1,21 @@
 import { OfferService } from './offer-service.interface.js';
 import { inject, injectable } from 'inversify';
-import { EComponent, ESortType } from '../../types/index.js';
+import { EComponent, ESortType, TFindOfferParameters } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
-import { DocumentType, types } from '@typegoose/typegoose';
+import { DocumentType, Ref, types } from '@typegoose/typegoose';
 import { OfferEntity } from './offer.entity.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
-import {
-  DEFAULT_OFFER_COUNT,
-  DEFAULT_PREMIUM_OFFER_COUNT
-} from './offer.constant.js';
+import { DEFAULT_PREMIUM_OFFER_COUNT } from './offer.constant.js';
 import { ObjectId } from 'mongodb';
+import { TFindPremiumOfferParameters } from './type/find-premium-offer-parameters.type.js';
+import { TAddFavoriteOfferParameters } from './type/add-favorite-parameters.type.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
   constructor(
     @inject(EComponent.Logger) private readonly logger: Logger,
-    @inject(EComponent.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
+    @inject(EComponent.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
   ) { }
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
@@ -26,31 +25,44 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
-  public async findByOfferId(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
-      .findById(offerId)
-      .populate(['userId'])
-      .exec();
-  }
-
-  public async find(userId?: string, offerCount?: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel
+  public async findByOfferId(data: TAddFavoriteOfferParameters): Promise<DocumentType<OfferEntity>[] | null> {
+    const detailOffer = await this.offerModel
       .aggregate([
-        { $sort: { createdAt: ESortType.Down } },
-        { $limit: offerCount ?? DEFAULT_OFFER_COUNT },
+        { $match: { _id: new ObjectId(data.offerId) } },
         {
-          $project: {
-            _id: 1,
-            title: 1,
-            date: 1,
-            city: 1,
-            previewImage: 1,
-            isPremium: 1,
-            rating: 1,
-            offerType: 1,
-            price: 1,
-            commentCount: 1,
-            userId: 1,
+          $lookup: {
+            from: 'comments',
+            localField: '_id',
+            foreignField: 'offerId',
+            as: 'offerComments',
+          },
+        },
+        {
+          $unwind: {
+            path: '$offerComments',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            title: { $first: '$title' },
+            description: { $first: '$description' },
+            date: { $first: '$createdAt' },
+            city: { $first: '$city' },
+            previewImage: { $first: '$previewImage' },
+            images: { $first: '$images' },
+            isPremium: { $first: '$isPremium' },
+            bedrooms: { $first: '$bedrooms' },
+            maxAdults: { $first: '$maxAdults' },
+            offerComments: {$first: '$offerComments'},
+            averageRating: {$avg: '$offerComments.rating'},
+            offerType: { $first: '$offerType' },
+            price: { $first: '$price' },
+            goods: { $first: '$goods' },
+            userId: { $first: '$userId' },
+            commentCount: { $first: '$commentCount' },
+            location: { $first: '$location' },
           }
         },
         {
@@ -59,16 +71,107 @@ export class DefaultOfferService implements OfferService {
             pipeline: [
               {
                 $match: {
-                  _id: new ObjectId(userId)
+                  _id: 'userId'
                 }
               },
             ],
             as: 'authUser'
           }
         },
-        { $addFields: { isFavorite: { $in: ['$_id', '$authUser.favorites'] } } },
-        { $unset: ['_id', 'authUser', 'userId']}
-      ]);
+        {
+          $addFields: {
+            offerComments: '$offerComments',
+            rating: {
+              $cond: {
+                if: { $eq: ['$averageRating', null] },
+                then: 0,
+                else: '$averageRating',
+              }
+            },
+            isFavorite: {
+              $cond: {
+                if: { $gt: [{ $size: { $ifNull: [data.userFavorites, []] } }, 0] },
+                then: {$in: ['$_id', data.userFavorites]},
+                else: false
+              }
+            },
+          }
+        },
+        { $unset: ['_id', 'authUser', 'offerComments', 'averageRating']}
+      ]).exec();
+    return detailOffer;
+  }
+
+  public async find(params: TFindOfferParameters): Promise<DocumentType<OfferEntity>[]> {
+    const result = await this.offerModel
+      .aggregate([
+        { $sort: { createdAt: ESortType.Down } },
+        { $limit: params.offerCount },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: '_id',
+            foreignField: 'offerId',
+            as: 'offerComments',
+          },
+        },
+        {
+          $unwind: {
+            path: '$offerComments',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            title: { $first: '$title' },
+            date: { $first: '$date' },
+            city: { $first: '$city' },
+            previewImage: { $first: '$previewImage' },
+            isPremium: { $first: '$isPremium' },
+            offerComments: {$first: '$offerComments'},
+            averageRating: {$avg: '$offerComments.rating'},
+            offerType: { $first: '$offerType' },
+            price: { $first: '$price' },
+            commentCount: { $first: '$commentCount' },
+            userId: { $first: '$userId' },
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            pipeline: [
+              {
+                $match: {
+                  _id: new ObjectId(params.userId)
+                }
+              },
+            ],
+            as: 'authUser'
+          }
+        },
+        {
+          $addFields: {
+            offerComments: '$offerComments',
+            rating: {
+              $cond: {
+                if: { $eq: ['$averageRating', null] },
+                then: 0,
+                else: '$averageRating',
+              }
+            },
+            isFavorite: {
+              $cond: {
+                if: { $gt: [{ $size: { $ifNull: [params.userFavorites, []] } }, 0] },
+                then: {$in: ['$_id', params.userFavorites]},
+                else: false
+              }
+            },
+          }
+        },
+        { $unset: ['_id', 'authUser', 'userId', 'offerComments', 'averageRating']}
+      ]).exec();
+    return result;
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
@@ -77,7 +180,7 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
+  public async updateById(offerId: string | undefined, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true})
       .populate(['userId'])
@@ -88,13 +191,79 @@ export class DefaultOfferService implements OfferService {
     return (await this.offerModel.exists({ _id: documentId })) !== null;
   }
 
-  public async findPremium(city: string): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel
-      .find({ city })
-      .sort({ createAt: ESortType.Down })
-      .limit(DEFAULT_PREMIUM_OFFER_COUNT)
-      .populate(['userId'])
-      .exec();
+  public async findPremium(params: TFindPremiumOfferParameters): Promise<DocumentType<OfferEntity>[]> {
+    const { city } = params;
+
+    const result = await this.offerModel
+      .aggregate([
+        { $sort: { createdAt: ESortType.Down } },
+        { $match: { city: city, isPremium: true } },
+        { $limit: DEFAULT_PREMIUM_OFFER_COUNT },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: '_id',
+            foreignField: 'offerId',
+            as: 'offerComments',
+          },
+        },
+        {
+          $unwind: {
+            path: '$offerComments',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            title: { $first: '$title' },
+            date: { $first: '$date' },
+            city: { $first: '$city' },
+            previewImage: { $first: '$previewImage' },
+            isPremium: { $first: '$isPremium' },
+            offerComments: {$first: '$offerComments'},
+            averageRating: {$avg: '$offerComments.rating'},
+            offerType: { $first: '$offerType' },
+            price: { $first: '$price' },
+            commentCount: { $first: '$commentCount' },
+            userId: { $first: '$userId' },
+          }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            pipeline: [
+              {
+                $match: {
+                  _id: new ObjectId(params.userId)
+                }
+              },
+            ],
+            as: 'authUser'
+          }
+        },
+        {
+          $addFields: {
+            offerComments: '$offerComments',
+            rating: {
+              $cond: {
+                if: { $eq: ['$averageRating', null] },
+                then: 0,
+                else: '$averageRating',
+              }
+            },
+            isFavorite: {
+              $cond: {
+                if: { $gt: [{ $size: { $ifNull: [params.userFavorites, []] } }, 0] },
+                then: {$in: ['$_id', params.userFavorites]},
+                else: false
+              }
+            },
+          }
+        },
+        { $unset: ['_id', 'authUser', 'userId', 'offerComments', 'averageRating']}
+      ]).exec();
+    return result;
   }
 
   public async incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
@@ -104,5 +273,49 @@ export class DefaultOfferService implements OfferService {
           commentCount: 1,
         }})
       .exec();
+  }
+
+  public async findFavorites(favorites: Ref<OfferEntity>[] | undefined): Promise<DocumentType<OfferEntity>[]>{
+    const userFavorites = await this.offerModel
+      .aggregate([
+        {
+          $match: {
+            _id: { $in: favorites }
+          },
+        },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: '_id',
+            foreignField: 'offerId',
+            as: 'offerComments',
+          }
+        },
+        {
+          $unwind: {
+            path: '$offerComments',
+            preserveNullAndEmptyArrays: true,
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            title: { $first: '$title' },
+            date: { $first: '$date' },
+            city: { $first: '$city' },
+            previewImage: {$first: '$previewImage'},
+            isPremium: { $first: '$isPremium' },
+            isFavorite: { $first: { $in: ['$_id', favorites]}},
+            rating: {$avg: { $ifNull: ['$offerComments.rating', 0]}},
+            offerType: { $first: '$offerType' },
+            price: { $first: '$price' },
+            commentCount: { $first: '$commentCount' },
+          }
+        },
+        {
+          $unset: '_id',
+        },
+      ]).exec();
+    return userFavorites;
   }
 }

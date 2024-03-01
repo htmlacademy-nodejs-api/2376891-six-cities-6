@@ -4,7 +4,7 @@ import { EComponent } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { CommentRdo, OfferService, CommentService, CreateCommentDto } from '../index.js';
 import { TCreateCommentRequest } from './types/create-comment-request.type.js';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../helpers/common.js';
 
@@ -27,6 +27,14 @@ export default class CommentController extends BaseController {
         new ValidateDtoMiddleware(CreateCommentDto)
       ]
     });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.getOfferComments,
+      // middlewares: [
+      //   new ValidateDtoMiddleware(CreateCommentDto)
+      // ]
+    });
   }
 
   public async create({ body, tokenPayload }: TCreateCommentRequest, res: Response): Promise<void> {
@@ -41,5 +49,10 @@ export default class CommentController extends BaseController {
     const comment = await this.commentService.create({...body, userId: tokenPayload.id});
     await this.offerService.incCommentCount(body.offerId);
     this.created(res, fillDTO(CommentRdo, comment));
+  }
+
+  public async getOfferComments({ params: {offerId} }: Request, res: Response): Promise<void> {
+    const comments = await this.commentService.findByOfferId(offerId);
+    this.ok(res, fillDTO(CommentRdo, comments));
   }
 }

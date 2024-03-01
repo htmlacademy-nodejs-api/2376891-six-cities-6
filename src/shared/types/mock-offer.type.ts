@@ -12,7 +12,6 @@ export type TMockOffer = {
   previewImage: string;
   images: string[];
   isPremium: boolean;
-  rating: number;
   offerType: EOfferType;
   bedrooms: number;
   maxAdults: number;

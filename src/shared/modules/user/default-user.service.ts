@@ -7,11 +7,13 @@ import { EComponent, TUniqueQuery } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
 
+export type TFavoriteIds = string[];
+
 @injectable()
 export class DefaultUserService implements UserService {
   constructor(
     @inject(EComponent.Logger) private readonly logger: Logger,
-    @inject(EComponent.UserModel) private readonly userModel: types.ModelType<UserEntity>
+    @inject(EComponent.UserModel) private readonly userModel: types.ModelType<UserEntity>,
   ) {}
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
@@ -37,29 +39,9 @@ export class DefaultUserService implements UserService {
     return this.create(dto, salt);
   }
 
-  public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
+  public async updateById(userId: string | undefined, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
     return this.userModel
       .findByIdAndUpdate(userId, dto, { new: true })
       .exec();
   }
-
-  // public async findFavorites(userId: string): Promise<DocumentType<UserEntity>[]> {
-  //   return this.userModel.find()
-  //     .populate('userId')
-  //     .exec();
-  //   return this.userModel
-  //     .aggregate([
-  //       {
-  //         $lookup: {
-  //           from: 'offers',
-  //           let: { categoryId: '$_id'},
-  //           pipeline: [
-  //             { $match: { $expr: { $in: ['$$categoryId', '$categories'] } } },
-  //             { $project: { _id: 1}}
-  //           ],
-  //           as: 'offers'
-  //         },
-  //       },
-  //     ]).exec();
-  // }
 }

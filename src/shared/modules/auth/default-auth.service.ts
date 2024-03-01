@@ -23,11 +23,8 @@ export class DefaultAuthService implements AuthService {
     const jwtExpired = this.config.get('JWT_EXPIRED');
     const secretKey = crypto.createSecretKey(jwtSecret, 'utf-8');
     const tokenPayload: TTokenPayload = {
-      name: user.name,
-      email: user.email,
-      avatarUrl: user?.avatarUrl,
-      accountType: user.accountType,
       id: user.id,
+      email: user.email,
     };
 
     this.logger.info(`Create token for ${user.email}`);

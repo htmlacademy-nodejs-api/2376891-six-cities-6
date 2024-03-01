@@ -3,7 +3,8 @@ import { error } from 'console';
 import { ICommand } from './command.interface.js';
 import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
 import { createMockOffer, getErrorMessage, getMongoURI, generatePassword } from '../../shared/helpers/index.js';
-import { ECommand, UserDtoConstraint } from '../../utils/const.js';
+import { ECommand } from '../../utils/const.js';
+import { USER_DTO_CONSTRAINT } from '../../shared/modules/index.js';
 import { UserService } from '../../shared/modules/user/user-service.interface.js';
 import { OfferModel, OfferService, DefaultOfferService, DefaultUserService, UserModel } from '../../shared/modules/index.js';
 import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
@@ -43,7 +44,7 @@ export class ImportCommand implements ICommand {
   private async saveOffer(offer: TMockOffer) {
     const user = await this.userService.findOrCreate({
       ...offer.user,
-      password: generatePassword(UserDtoConstraint.Password.Min, UserDtoConstraint.Password.Max),
+      password: generatePassword(USER_DTO_CONSTRAINT.PASSWORD.MIN, USER_DTO_CONSTRAINT.PASSWORD.MAX),
     }, this.salt);
 
     await this.offerService.create({
@@ -54,7 +55,6 @@ export class ImportCommand implements ICommand {
       previewImage: offer.previewImage,
       images: offer.images,
       isPremium: offer.isPremium,
-      // rating: offer.rating,
       offerType: offer.offerType,
       bedrooms: offer.bedrooms,
       maxAdults: offer.maxAdults,
