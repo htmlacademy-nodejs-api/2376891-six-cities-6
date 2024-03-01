@@ -68,7 +68,6 @@ export class CreateOfferDto {
   @IsEnum(EGood, { each: true, message: OfferDtoValidationMessages.goods.invalid })
   public goods!: EGood[];
 
-  @IsMongoId({message: OfferDtoValidationMessages.userId.invalidId})
   public userId!: string;
 
   @IsInt({message: OfferDtoValidationMessages.commentCount.invalidFormat})

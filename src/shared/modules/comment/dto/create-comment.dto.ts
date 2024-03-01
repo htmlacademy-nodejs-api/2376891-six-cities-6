@@ -15,6 +15,5 @@ export class CreateCommentDto {
   @Max(ERatingConstraint.Max)
   public rating!: number;
 
-  @IsMongoId({ message: CreateCommentMessages.userId.invalidFormat })
   public userId!: string;
 }
