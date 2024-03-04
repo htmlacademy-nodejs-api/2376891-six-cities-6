@@ -1,6 +1,6 @@
-export const COMMENT_DTO_CONSTRAINT = {
-  TEXT: { MIN: 5, MAX: 1024 },
-  RATING: { MIN: 1, MAX: 5 },
+export const CommentDtoConstraint = {
+  Text: { MIN: 5, MAX: 1024 },
+  Rating: { MIN: 1, MAX: 5 },
 } as const;
 
 export enum ECommentsConstraint {
@@ -8,3 +8,4 @@ export enum ECommentsConstraint {
   Max = 20,
 }
 
+export const DEFAULT_COMMENTS_COUNT = 50;

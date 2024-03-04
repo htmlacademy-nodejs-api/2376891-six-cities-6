@@ -1,16 +1,16 @@
 import { inject, injectable } from 'inversify';
-import { ExceptionFilter } from './exception-filter.interface.js';
-import { EComponent } from '../../../types/component.enum.js';
-import { Logger } from '../../logger/index.js';
 import { NextFunction, Request, Response } from 'express';
-import { ApplicationError, HttpError } from '../index.js';
 import { StatusCodes } from 'http-status-codes';
+import { IExceptionFilter } from './exception-filter.interface.js';
+import { EComponent } from '../../../types/index.js';
+import { ILogger } from '../../logger/index.js';
+import { EApplicationError, HttpError } from '../index.js';
 import { createErrorObject } from '../../../helpers/common.js';
 
 @injectable()
-export class HttpErrorExceptionFilter implements ExceptionFilter {
+export class HttpErrorExceptionFilter implements IExceptionFilter {
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger
+    @inject(EComponent.Logger) private readonly logger: ILogger
   ) {
     this.logger.info('Register HttpErrorExceptionFilter');
   }
@@ -24,6 +24,6 @@ export class HttpErrorExceptionFilter implements ExceptionFilter {
 
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json(createErrorObject(ApplicationError.CommonError, error.message));
+      .json(createErrorObject(EApplicationError.CommonError, error.message));
   }
 }

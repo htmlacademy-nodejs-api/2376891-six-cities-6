@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
-import { EComponent } from '../../../types/component.enum.js';
-import { Logger } from '../../logger/index.js';
-import { Config, RestSchema } from '../../config/index.js';
+import { EComponent } from '../../../types/index.js';
+import { ILogger } from '../../logger/index.js';
+import { IConfig, TRestSchema } from '../../config/index.js';
 import { DEFAULT_STATIC_IMAGES, STATIC_RESOURCE_FIELDS } from './path-transformer.constant.js';
 import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from '../../../../rest/rest.constant.js';
 import { getFullServerPath } from '../../../helpers/common.js';
@@ -13,8 +13,8 @@ function isObject(value: unknown): value is Record<string, object> {
 @injectable()
 export class PathTransformer {
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger,
-    @inject(EComponent.Config) private readonly config: Config<RestSchema>,
+    @inject(EComponent.Logger) private readonly logger: ILogger,
+    @inject(EComponent.Config) private readonly config: IConfig<TRestSchema>,
   ) {
     this.logger.info('PathTransformer created!');
   }

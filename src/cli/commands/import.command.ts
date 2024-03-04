@@ -4,19 +4,18 @@ import { ICommand } from './command.interface.js';
 import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
 import { createMockOffer, getErrorMessage, getMongoURI, generatePassword } from '../../shared/helpers/index.js';
 import { ECommand } from '../../utils/const.js';
-import { USER_DTO_CONSTRAINT } from '../../shared/modules/index.js';
-import { UserService } from '../../shared/modules/user/user-service.interface.js';
-import { OfferModel, OfferService, DefaultOfferService, DefaultUserService, UserModel } from '../../shared/modules/index.js';
-import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
-import { Logger } from '../../shared/libs/logger/index.js';
-import { ConsoleLogger } from '../../shared/libs/logger/console.logger.js';
+import { OfferDtoConstraint, UserDtoConstraint, OfferModel, OfferService, DefaultOfferService, IUserService, DefaultUserService, UserModel } from '../../shared/modules/index.js';
+import { IDatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
+import { ILogger, ConsoleLogger } from '../../shared/libs/logger/index.js';
 import { TMockOffer } from '../../shared/types/index.js';
+import { IConfig, RestConfig, TRestSchema } from '../../shared/libs/config/index.js';
 
 export class ImportCommand implements ICommand {
-  private userService: UserService;
+  private readonly config: IConfig<TRestSchema>;
+  private userService: IUserService;
   private offerService: OfferService;
-  private databaseClient: DatabaseClient;
-  private logger: Logger;
+  private databaseClient: IDatabaseClient;
+  private logger: ILogger;
   private salt!: string;
 
   constructor() {
@@ -24,6 +23,7 @@ export class ImportCommand implements ICommand {
     this.onCompleteImport = this.onCompleteImport.bind(this);
 
     this.logger = new ConsoleLogger();
+    this.config = new RestConfig(this.logger);
     this.offerService = new DefaultOfferService(this.logger, OfferModel);
     this.userService = new DefaultUserService(this.logger, UserModel);
     this.databaseClient = new MongoDatabaseClient(this.logger);
@@ -44,7 +44,7 @@ export class ImportCommand implements ICommand {
   private async saveOffer(offer: TMockOffer) {
     const user = await this.userService.findOrCreate({
       ...offer.user,
-      password: generatePassword(USER_DTO_CONSTRAINT.PASSWORD.MIN, USER_DTO_CONSTRAINT.PASSWORD.MAX),
+      password: generatePassword(UserDtoConstraint.Password.MIN, UserDtoConstraint.Password.MAX),
     }, this.salt);
 
     await this.offerService.create({
@@ -58,6 +58,7 @@ export class ImportCommand implements ICommand {
       offerType: offer.offerType,
       bedrooms: offer.bedrooms,
       maxAdults: offer.maxAdults,
+      rating: OfferDtoConstraint.Rating.MIN,
       price: offer.price,
       goods: offer.goods,
       userId: user.id,
@@ -72,12 +73,12 @@ export class ImportCommand implements ICommand {
 
   public async execute(
     filename: string,
-    login: string | undefined = process.env.DB_USER,
-    password: string | undefined = process.env.DB_PASSWORD,
-    host: string | undefined = process.env.DB_HOST,
-    port: string | undefined = process.env.DB_PORT,
-    dbname: string | undefined = process.env.DB_NAME,
-    salt: string | undefined = process.env.SALT
+    login: string = this.config.get('DB_USER'),
+    password: string = this.config.get('DB_PASSWORD'),
+    host: string = this.config.get('DB_HOST'),
+    port: string = this.config.get('DB_PORT'),
+    dbname: string = this.config.get('DB_NAME'),
+    salt: string = this.config.get('SALT'),
   ): Promise<void> {
 
     const uri = getMongoURI(

@@ -1,16 +1,16 @@
 import { inject, injectable } from 'inversify';
-import { ExceptionFilter } from './exception-filter.interface.js';
-import { EComponent } from '../../../types/index.js';
-import { Logger } from '../../logger/index.js';
 import { NextFunction, Request, Response } from 'express';
-import { ApplicationError, ValidationError } from '../index.js';
 import { StatusCodes } from 'http-status-codes';
+import { IExceptionFilter } from './exception-filter.interface.js';
+import { EComponent } from '../../../types/index.js';
+import { ILogger } from '../../logger/index.js';
+import { EApplicationError, ValidationError } from '../index.js';
 import { createErrorObject } from '../../../helpers/common.js';
 
 @injectable()
-export class ValidationExceptionFilter implements ExceptionFilter {
+export class ValidationExceptionFilter implements IExceptionFilter {
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger
+    @inject(EComponent.Logger) private readonly logger: ILogger
   ) {
     this.logger.info('Register ValidationExceptionFilter');
   }
@@ -28,6 +28,6 @@ export class ValidationExceptionFilter implements ExceptionFilter {
 
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json(createErrorObject(ApplicationError.ValidationError, error.message, error.details));
+      .json(createErrorObject(EApplicationError.ValidationError, error.message, error.details));
   }
 }

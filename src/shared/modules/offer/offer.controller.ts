@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
-import { BaseController, DocumentExistsMiddleware, HttpMethod, PrivateRouteMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, EHttpMethod, HttpError, PrivateRouteMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { EComponent } from '../../types/component.enum.js';
-import { Logger } from '../../libs/logger/index.js';
+import { ILogger } from '../../libs/logger/index.js';
 import { Request, Response } from 'express';
 import { OfferService } from './offer-service.interface.js';
 import { TParamOfferId } from './type/param-offerId.type.js';
@@ -10,41 +10,42 @@ import { fillDTO } from '../../helpers/common.js';
 import { OfferRdo } from './rdo/offer.rdo.js';
 import { TCreateOfferRequest } from './type/create-offer-request.type.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
-import { CommentService, CreateOfferDto, DEFAULT_OFFER_COUNT, PreviewOfferRdo, UserService } from '../index.js';
+import { ICommentService, CreateOfferDto, DEFAULT_OFFER_COUNT, ECommentsConstraint, PreviewOfferRdo, IUserService } from '../index.js';
 import { TFindOfferRequest } from './type/find-offer.request.type.js';
 import { ObjectId } from 'mongodb';
 import { UpdateFavoritesDto } from '../user/dto/update-favorites.dto.js';
+import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export default class OfferController extends BaseController {
   constructor(
-    @inject(EComponent.Logger) protected logger: Logger,
+    @inject(EComponent.Logger) protected logger: ILogger,
     @inject(EComponent.OfferService) private readonly offerService: OfferService,
-    @inject(EComponent.UserService) private readonly userService: UserService,
-    @inject(EComponent.CommentService) private readonly commentService: CommentService,
+    @inject(EComponent.UserService) private readonly userService: IUserService,
+    @inject(EComponent.CommentService) private readonly commentService: ICommentService,
   ) {
     super(logger);
 
     this.logger.info('Register routes for OfferController');
     this.addRoute({
       path: '/favorites',
-      method: HttpMethod.Get,
+      method: EHttpMethod.Get,
       handler: this.getFavorites,
       middlewares: [ new PrivateRouteMiddleware()]
     });
     this.addRoute({
       path: '/:offerId',
-      method: HttpMethod.Get,
+      method: EHttpMethod.Get,
       handler: this.show,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ]
     });
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
+    this.addRoute({ path: '/', method: EHttpMethod.Get, handler: this.index });
     this.addRoute({
       path: '/',
-      method: HttpMethod.Post,
+      method: EHttpMethod.Post,
       handler: this.create,
       middlewares: [
         new PrivateRouteMiddleware(),
@@ -53,7 +54,7 @@ export default class OfferController extends BaseController {
     });
     this.addRoute({
       path: '/:offerId',
-      method: HttpMethod.Delete,
+      method: EHttpMethod.Delete,
       handler: this.delete,
       middlewares: [
         new PrivateRouteMiddleware(),
@@ -63,7 +64,7 @@ export default class OfferController extends BaseController {
     });
     this.addRoute({
       path: '/:offerId',
-      method: HttpMethod.Patch,
+      method: EHttpMethod.Patch,
       handler: this.update,
       middlewares: [
         new PrivateRouteMiddleware(),
@@ -72,11 +73,11 @@ export default class OfferController extends BaseController {
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ]
     });
-    this.addRoute({ path: '/:city/premium', method: HttpMethod.Get, handler: this.getPremium });
+    this.addRoute({ path: '/:city/premium', method: EHttpMethod.Get, handler: this.getPremium });
     this.addRoute({
-      path: '/:offerId/addFavorite',
-      method: HttpMethod.Patch,
-      handler: this.addFavorite,
+      path: '/:offerId/updateFavorites',
+      method: EHttpMethod.Patch,
+      handler: this.updateFavorites,
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
@@ -84,53 +85,58 @@ export default class OfferController extends BaseController {
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ]
     });
-    this.addRoute({
-      path: '/:offerId/deleteFavorite',
-      method: HttpMethod.Patch,
-      handler: this.deleteFavorite,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDtoMiddleware(UpdateOfferDto),
-        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
-      ]
-    });
   }
 
   public async show({ params, tokenPayload }: Request<TParamOfferId, unknown, CreateOfferDto>, res: Response): Promise<void> {
-    const user = await this.userService.findUnique({ _id: tokenPayload.id });
-    const offer = await this.offerService.findByOfferId({userId: tokenPayload?.id, offerId: params.offerId, userFavorites: user?.favorites});
+    const user = await this.userService.findUnique({ _id: tokenPayload?.id });
+    const newFavorites = new Set(user?.favorites.map((offer) => offer.id));
+    const offer = await this.offerService.findByOfferId({userId: tokenPayload?.id, offerId: params.offerId, userFavorites: [...newFavorites]});
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
   public async index({query, tokenPayload}: TFindOfferRequest, res: Response): Promise<void> {
     const offerCount = query?.limit ? Number(query.limit) : DEFAULT_OFFER_COUNT;
-    const user = await this.userService.findUnique({_id: tokenPayload?.id});
+    const user = await this.userService.findUnique({ _id: tokenPayload?.id });
     const offers = await this.offerService.find({userId: tokenPayload?.id, offerCount: offerCount, userFavorites: user?.favorites});
     this.ok(res, fillDTO(PreviewOfferRdo, offers));
   }
 
   public async create({ body, tokenPayload }: TCreateOfferRequest, res: Response): Promise<void> {
     const { isFavorite, ...rest } = body;
+    const offerRating = Number(body.rating.toFixed(1));
+    const user = await this.userService.findUnique({ _id: tokenPayload.id });
+    if (!user) {
+      throw new Error('User not found.');
+    }
+    const result = await this.offerService.create({
+      ...rest,
+      userId: tokenPayload.id,
+      commentCount: ECommentsConstraint.Min,
+      rating: offerRating
+    });
 
-    const result = await this.offerService.create({ ...rest, userId: tokenPayload.id });
+    let newFavorites = new Set(user.favorites.map((offer) => offer.id));
 
     if (isFavorite) {
-      const user = await this.userService.findUnique({ _id: tokenPayload.id });
-      if (!user) {
-        throw new Error('User not found.');
-      }
-
-      user.favorites.push(new ObjectId(result._id));
-      await this.userService.updateById(tokenPayload.id, user);
+      newFavorites = newFavorites.add(result.id);
+      await this.userService.updateById(tokenPayload.id, {
+        favorites: [...newFavorites]
+      });
     }
 
-    const offer = await this.offerService.findByOfferId(result.id);
+    const offer = await this.offerService.findByOfferId({
+      userId: tokenPayload.id,
+      offerId: result.id,
+      userFavorites: [...newFavorites] });
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
-  public async delete({ params }: Request<TParamOfferId>, res: Response): Promise<void> {
+  public async delete({ params, tokenPayload }: Request<TParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
+    const offerToDelete = await this.offerService.findByOfferId({ offerId: params.offerId });
+    if (offerToDelete && offerToDelete[0].userId.toString() !== new ObjectId(tokenPayload.id).toString()) {
+      throw new Error('You can only edit your own offers.');
+    }
     const offer = await this.offerService.deleteById(offerId);
 
     await this.commentService.deleteByOfferId(offerId);
@@ -138,7 +144,12 @@ export default class OfferController extends BaseController {
     this.noContent(res, offer);
   }
 
-  public async update({ body, params }: Request<TParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
+  public async update({ body, params, tokenPayload }: Request<TParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
+    const offerToUpdate = await this.offerService.findByOfferId({ offerId: params.offerId });
+
+    if (offerToUpdate && offerToUpdate[0].userId.toString() !== new ObjectId(tokenPayload.id).toString()) {
+      throw new Error('You can only edit your own offers.');
+    }
     const updatedOffer = await this.offerService.updateById(params.offerId, body);
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
@@ -156,32 +167,31 @@ export default class OfferController extends BaseController {
     this.ok(res, fillDTO(PreviewOfferRdo, favoriteOffers));
   }
 
-  public async addFavorite({ params, tokenPayload }: Request<TParamOfferId, unknown, UpdateOfferDto>, res: Response) {
+  public async updateFavorites({ params, tokenPayload }: Request<TParamOfferId, unknown, UpdateFavoritesDto>, res: Response) {
     const user = await this.userService.findUnique({ _id: tokenPayload.id });
     if (!user) {
       throw new Error('User not found.');
     }
-    if (user.favorites.includes(new ObjectId(params.offerId))) {
-      throw new Error('Offer is already added to favorites.');
+    if (!(await this.offerService.exists(params.offerId))) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${params.offerId} not found.`,
+        'UserController',
+      );
     }
-    user.favorites.push(new ObjectId(params.offerId));
-    await this.userService.updateById(tokenPayload.id, user);
-    this.noContent(res, null);
-  }
+    const newFavorites = new Set(user.favorites.map((offer) => offer.id));
 
-  public async deleteFavorite({params, tokenPayload}: Request<TParamOfferId, unknown, UpdateOfferDto>, res: Response) {
-    const user = await this.userService.findUnique({ _id: tokenPayload.id });
-    if (!user) {
-      throw new Error('User not found.');
+    if (user.favorites.some((favorite) => favorite._id.equals(params.offerId))) {
+      newFavorites.delete(params.offerId);
+      await this.userService.updateById(tokenPayload.id, {
+        favorites: [...newFavorites]
+      });
+    } else {
+      newFavorites.add(params.offerId);
+      await this.userService.updateById(tokenPayload.id, {
+        favorites: [...newFavorites]
+      });
     }
-    if (!user.favorites.includes(new ObjectId(params.offerId))) {
-      throw new Error('Offer is already deleted from favorites.');
-    }
-    const offerIdObject = new ObjectId(params.offerId);
-
-    user.favorites = user.favorites.filter((favorite) => favorite.toString() !== offerIdObject.toString());
-    await this.userService.updateById(tokenPayload.id, user);
-    await this.commentService.deleteByOfferId(params.offerId);
     this.noContent(res, null);
   }
 }

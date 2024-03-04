@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { EUserAccountType } from '../../../types/user.type.js';
+import { EUserAccountType } from '../../../types/index.js';
 
 export class LoggedUserRdo {
   @Expose()

@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { EUserAccountType } from '../../../types/user.type.js';
+import { EUserAccountType } from '../../../types/index.js';
 
 export class UserRdo {
   @Expose()
@@ -16,7 +16,4 @@ export class UserRdo {
 
   @Expose()
   public accountType!: EUserAccountType;
-
-  // @Expose()
-  // public favorites!: string[];
 }

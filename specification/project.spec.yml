@@ -89,44 +89,36 @@ paths:
                 $ref: '#/components/schemas/userAuth'
         "400":
           description: Неверный логин или пароль.
-        "403":
+        "401":
           description: Пользователь не авторизован.
 
-  /users/logout:
+  /users/avatar:
     post:
       tags:
         - users
-      summary: Завершение пользовательского сеанса
-      description: Завершает пользовательский сеанс.
+      summary: Загрузка изображение аватара
+      description: Загружает изображение аватара пользователя. Изображение аватара должно быть в формате `png` или `jpg`.
 
       requestBody:
-        description: Данные для завершения пользовательского сеанса.
+        description: Загружает изображение аватара пользователя.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/token'
+              $ref: '#/components/schemas/userAvatar'
         required: true
 
       responses:
         "200":
-          description: Пользовательский сеанс завершен.
-        "403":
-          description: Не удалось завершить пользовательский сеанс.
+          description: Аватар успешно загружен.
+        "400":
+          description: Ошибка загрузки аватара.
 
-  /users/{userId}/favorites:
+  /offers/favorites:
     get:
       tags:
         - users
       summary: Загрузка списка избранных предложений по аренде
       description: Возвращает список предложений по аренде, добавленных в избранное.
-
-      requestBody:
-        description: Данные для загрузки списка предложений по аренде, добавленных в избранное.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/token'
-        required: true
 
       responses:
         "200":
@@ -137,46 +129,27 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/previewOffer'
-        "403":
+        "401":
           description: Избранные предложения по аренде доступны только авторизованным пользователям.
-    post:
+    patch:
       tags:
-        - users
-      summary: Добавление предложения по аренде в избранное
-      description: Добавляет предложение в избранное.
+        - offers
+      summary: Добавление/удаление предложения по аренде в/из избранного
+      description: Добавляет/удаляет предложение в/из избранного.
 
       requestBody:
-        description: Данные для добавления предложения по аренде в избранное.
+        description: Данные для добавления/удаления предложения по аренде в/из избранного.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/offerId'
+              $ref: '#/components/schemas/favorite'
         required: true
 
       responses:
         "204":
-          description: Предложение по аренде добавлено в избранное.
-        "403":
-          description: Нет прав для добавления предложение по аренде в избранное.
-    delete:
-      tags:
-        - users
-      summary: Удаление предложения по аренде из избранного
-      description: Удаляет предложение по аренде из избранного.
-
-      requestBody:
-        description: Данные для удаления предложения по аренде из избранного.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/offerId'
-        required: true
-
-      responses:
-        "200":
-          description: Предложение по аренде удалено из избранного.
-        "403":
-          description: Нет прав для уаления предложение по аренде из избранного.
+          description: Статус предложения Избранное успешно изменён.
+        "401":
+          description: Нет прав для добавления/удаления предложение по аренде в/из избранного.
 
   /offers:
     get:
@@ -184,14 +157,6 @@ paths:
         - offers
       summary: Загрузка списка предложений по аренде
       description: Возвращает список предложений по аренде
-
-      requestBody:
-        description: Данные для загрузки списка предложений по аренде.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/offersCount'
-        required: false
 
       responses:
         "200":
@@ -226,7 +191,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/createOffer'
         "403":
-          description: Валидация не пройдена. Предложение не создано.
+          description: Создавать предложения по аренде могут только авторизованные пользователи. Предложение не создано.
 
   /offers/{offerId}:
     get:
@@ -234,14 +199,6 @@ paths:
         - offers
       summary: Загрузка детальной информации по предложению
       description: Возвращает детальную информацию по предложению.
-
-      requestBody:
-        description: Данные для загрузки детальной информации по предложению.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/token'
-        required: true
 
       responses:
         "200":
@@ -263,7 +220,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/editOffer'
+              $ref: '#/components/schemas/createOffer'
         required: true
 
       responses:
@@ -281,34 +238,18 @@ paths:
       summary: Удаление предложения по аренде
       description: Удаляет определенное предложение по аренде.
 
-      requestBody:
-        description: Данные для удаления предложения по аренде.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/token'
-        required: true
-
       responses:
         "204":
           description: Предложение по аренде удалено.
         "403":
           description: Нет прав для удаления этого предложения. Предложение по аренде не удалено.
 
-  /offers/premium:
+  /offers/{city}/premium:
     get:
       tags:
         - offers
       summary: Загрузка списка премиальных предложений по аренде для города
       description: Возвращает список премиальных предложений по аренде для города.
-
-      requestBody:
-        description: Данные для загрузки списка премиальных предложений по аренде для города.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/city'
-        required: true
 
       responses:
         "200":
@@ -328,14 +269,6 @@ paths:
         - comments
       summary: Загрузка списка комментариев для определенного предложения
       description: Возвращает список комментариев для определенного предложения.
-
-      requestBody:
-        description: Данные для загрузки списка комментариев для определенного предложения.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/token'
-        required: true
 
       responses:
         "200":
@@ -359,7 +292,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/newComment'
+              $ref: '#/components/schemas/comment'
         required: true
 
       responses:
@@ -386,7 +319,7 @@ components:
           example: keks@htmlacademy.ru
         avatar:
           type: string
-          example: img/avatar-keks.jpg
+          example: https://14.design.htmlacademy.pro/static/avatar-keks.jpg
         password:
           type: string
           example: 123456
@@ -404,7 +337,7 @@ components:
           example: keks@htmlacademy.ru
         avatar:
           type: string
-          example: img/avatar-keks.jpg
+          example: https://14.design.htmlacademy.pro/static/avatar-keks.jpg
         userType:
           type: string
           example: pro
@@ -418,14 +351,29 @@ components:
           type: string
           example: 123456
     token:
-      type: string
-      example: 6329c3d6a04ab1061c6425n
-    offerId:
-      type: string
-      example: 6329c3d6a04ab1061c6425nd
+      type: object
+      properties:
+        token:
+          type: string
+          example: 6329c3d6a04ab1061c6425n
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+    userAvatar:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 65cd2547bb5a9353b77b8c97
+        avatar:
+          type: string
+          example: https://14.design.htmlacademy.pro/static/avatar-keks.jpg
     previewOffer:
       type: object
       properties:
+        id:
+          type: string
+          example: 65cd2547bb5a9353b77b8c97
         title:
           type: string
           example: Waterfront with extraordinary view
@@ -514,67 +462,15 @@ components:
         location:
           type: object
           $ref: '#/components/schemas/location'
-    editOffer:
+    favorite:
       type: object
       properties:
-        offerId:
+        token:
           type: string
-          example: 6329c3d6a04ab1061c6425nd
-        title:
-          type: string
-          example: Waterfront with extraordinary view
-        description:
-          type: string
-          example: Design interior in most sympathetic area!
-        date:
-          type: string
-          example: 2023-09-09T09:23:20.316Z
-        city:
-          type: string
-          example: Amsterdam
-        previewImage:
-          type: string
-          example: https://14.react.pages.academy/static/offer/3.jpg
-        images:
-          type: array
-          example: [
-            https://14.react.pages.academy/static/offer/8.jpg,
-            https://14.react.pages.academy/static/offer/7.jpg,
-            https://14.react.pages.academy/static/offer/17.jpg
-          ]
-        isPremium:
+          example: 65cd2547bb5a9353b77b8c97
+        favorites:
           type: boolean
           example: true
-        isFavorite:
-          type: boolean
-          example: true
-        rating:
-          type: number
-          example: 4.1
-        offerType:
-          type: string
-          example: Apartment
-        bedrooms:
-          type: number
-          example: 3
-        maxAdults:
-          type: number
-          example: 4
-        price:
-          type: number
-          example: 500
-        goods:
-          type: array
-          example: [Breakfast;Air conditioning;Fridge;Washer]
-        author:
-          type: object
-          $ref: '#/components/schemas/createUser'
-        commentCount:
-          type: number
-          example: 5
-        location:
-          type: object
-          $ref: '#/components/schemas/location'
     comment:
       type: object
       properties:
@@ -587,21 +483,6 @@ components:
         rating:
           type: number
           example: 2
-        userId:
-          type: string
-          example: 6329c3d6a04ab1061c6425nd
-    newComment:
-      type: object
-
-      properties:
-        text:
-          type: string
-          example: Waterfront with extraordinary view
-
-        rating:
-          type: number
-          example: 2
-
         userId:
           type: string
           example: 6329c3d6a04ab1061c6425nd
@@ -620,3 +501,6 @@ components:
         longitude:
           type: string
           example: '2.351499'
+    offerId:
+      type: string
+      example: 6329c3d6a04ab1061c6425nd

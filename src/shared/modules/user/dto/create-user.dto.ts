@@ -1,22 +1,23 @@
-import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
-import { USER_DTO_CONSTRAINT, USER_DTO_MESSAGES } from '../../index.js';
-import { EUserAccountType } from '../../../types/user.type.js';
+import { IsEmail, IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import { UserDtoConstraint, UserDtoMessages } from '../../index.js';
+import { EUserAccountType } from '../../../types/index.js';
 
 export class CreateUserDto {
   @IsString()
-  @Length(USER_DTO_CONSTRAINT.NAME.MIN, USER_DTO_CONSTRAINT.NAME.MAX)
+  @Length(UserDtoConstraint.Name.MIN, UserDtoConstraint.Name.MAX)
   public name!: string;
 
   @IsEmail()
   public email!: string;
 
-  // @Matches(/\.(jpg|png)(\?.*)?$/i)
-  // public avatarUrl?: string;
+  @IsOptional()
+  @IsString()
+  public avatarUrl?: string;
 
   @IsString()
-  @Length(USER_DTO_CONSTRAINT.PASSWORD.MIN, USER_DTO_CONSTRAINT.PASSWORD.MAX)
+  @Length(UserDtoConstraint.Password.MIN, UserDtoConstraint.Password.MAX)
   public password!: string;
 
-  @IsEnum(EUserAccountType, {message: USER_DTO_MESSAGES.ACCOUNT_TYPE})
+  @IsEnum(EUserAccountType, {message: UserDtoMessages.AccountType})
   public accountType!: EUserAccountType;
 }

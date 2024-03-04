@@ -1,14 +1,8 @@
-import { Expose, Type } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { UserRdo } from '../../user/rdo/user.rdo.js';
-import { EOfferType } from '../../../types/housing-type.enum.js';
-import { TLocation } from '../../../types/location.type.js';
-import { EGood } from '../../../types/good.enum.js';
-import { ECityName } from '../../../types/city-name.enum.js';
+import { EOfferType, TLocation, EGood, ECityName } from '../../../types/index.js';
 
 export class OfferRdo {
-  // @Expose()
-  // public id!: string;
-
   @Expose()
   public title!: string;
 
@@ -51,9 +45,8 @@ export class OfferRdo {
   @Expose()
   public goods!: EGood[];
 
-  @Expose({ name: 'userId' })
-  @Type(() => UserRdo)
-  public user!: UserRdo;
+  @Expose()
+  public userId!: UserRdo;
 
   @Expose()
   public commentCount!: number;

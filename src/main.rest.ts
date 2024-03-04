@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { RestApplication, getRestApplicationContainer } from './rest/index.js';
-import { EComponent } from './shared/types/component.enum.js';
+import { EComponent } from './shared/types/index.js';
 
 async function bootstrap() {
   const appContainer = getRestApplicationContainer();

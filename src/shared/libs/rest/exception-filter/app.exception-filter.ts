@@ -1,16 +1,16 @@
 import { inject, injectable } from 'inversify';
-import { ExceptionFilter } from './exception-filter.interface.js';
-import { EComponent } from '../../../types/index.js';
-import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { Logger } from '../../logger/index.js';
-import { ApplicationError } from '../index.js';
+import { NextFunction, Request, Response } from 'express';
+import { IExceptionFilter } from './exception-filter.interface.js';
+import { EComponent } from '../../../types/index.js';
+import { ILogger } from '../../logger/index.js';
+import { EApplicationError } from '../index.js';
 import { createErrorObject } from '../../../helpers/index.js';
 
 @injectable()
-export class AppExceptionFilter implements ExceptionFilter {
+export class AppExceptionFilter implements IExceptionFilter {
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger
+    @inject(EComponent.Logger) private readonly logger: ILogger
   ) {
     this.logger.info('Register AppExceptionFilter');
   }
@@ -20,6 +20,6 @@ export class AppExceptionFilter implements ExceptionFilter {
 
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json(createErrorObject(ApplicationError.ServiceError, error.message));
+      .json(createErrorObject(EApplicationError.ServiceError, error.message));
   }
 }

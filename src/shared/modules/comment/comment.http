@@ -3,11 +3,11 @@
 
 POST http://localhost:4000/comments HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTIzMjViZDY3MzhmN2YwZGU4YzQzOCIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rLm5ldCIsImlhdCI6MTcwOTQ5NzY4MiwiZXhwIjoxNzA5NjcwNDgyfQ.pfm8JRw-nwcpBx5UvVCwALeNAQ-ye7VdeGgN7RhZ0Jk
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug
 
 {
   "text": "Как обстоят дела с коробками? Фирменная упаковка сохранена?",
-  "offerId": "65e2310e1ab2a66fac5158e1",
+  "offerId": "65e699163e5e4de3ff30b7e1",
   "rating": 5
 }
 
@@ -15,4 +15,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTIzMjViZDY3MzhmN2YwZGU4Y
 
 ## Получить список комментариев для предложения
 
-GET http://localhost:4000/comments/65e2310e1ab2a66fac5158e1 HTTP/1.1
+GET http://localhost:4000/comments/65e699163e5e4de3ff30b7e1 HTTP/1.1
+
+###
+
+GET http://localhost:4000/comments/65e699163e5e4de3ff30b7e1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug

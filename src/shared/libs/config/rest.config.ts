@@ -1,16 +1,16 @@
 import { config } from 'dotenv';
 import { inject, injectable } from 'inversify';
-import { Config } from './config.interface.js';
-import { Logger } from '../logger/index.js';
-import { configRestSchema, RestSchema } from './rest.schema.js';
+import { IConfig } from './config.interface.js';
+import { ILogger } from '../logger/index.js';
+import { configRestSchema, TRestSchema } from './rest.schema.js';
 import { EComponent } from '../../types/index.js';
 
 @injectable()
-export class RestConfig implements Config<RestSchema> {
-  private readonly config: RestSchema;
+export class RestConfig implements IConfig<TRestSchema> {
+  private readonly config: TRestSchema;
 
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger
+    @inject(EComponent.Logger) private readonly logger: ILogger
   ) {
     const parsedOutput = config();
 
@@ -25,7 +25,7 @@ export class RestConfig implements Config<RestSchema> {
     this.logger.info('.env file found and successfully parsed!');
   }
 
-  public get<T extends keyof RestSchema>(key: T): RestSchema[T] {
+  public get<T extends keyof TRestSchema>(key: T): TRestSchema[T] {
     return this.config[key];
   }
 }

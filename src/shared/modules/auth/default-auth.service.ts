@@ -1,21 +1,20 @@
 import { inject, injectable } from 'inversify';
 import * as crypto from 'node:crypto';
-import { AuthService } from './auth-service.interface.js';
+import { IAuthService, JWT_ALGORITHM } from './index.js';
 import { EComponent } from '../../types/index.js';
-import { Logger } from '../../libs/logger/index.js';
-import { LoginUserDto, UserEntity, UserService } from '../index.js';
-import { Config, RestSchema } from '../../libs/config/index.js';
+import { ILogger } from '../../libs/logger/index.js';
+import { LoginUserDto, UserEntity, IUserService } from '../index.js';
+import { IConfig, TRestSchema } from '../../libs/config/index.js';
 import { SignJWT } from 'jose';
-import { JWT_ALGORITHM } from './auth.constant.js';
 import { TTokenPayload } from './types/TokenPayload.js';
 import { UserNotFoundException, UserPasswordIncorrectException } from './errors/index.js';
 
 @injectable()
-export class DefaultAuthService implements AuthService {
+export class DefaultAuthService implements IAuthService {
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger,
-    @inject(EComponent.UserService) private readonly userService: UserService,
-    @inject(EComponent.Config) private readonly config: Config<RestSchema>,
+    @inject(EComponent.Logger) private readonly logger: ILogger,
+    @inject(EComponent.UserService) private readonly userService: IUserService,
+    @inject(EComponent.Config) private readonly config: IConfig<TRestSchema>,
   ) { }
 
   public async authenticate(user: UserEntity): Promise<string> {

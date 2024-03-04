@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { Middleware } from './middleware.interface.js';
 import multer, { diskStorage } from 'multer';
 import { extension } from 'mime-types';
 import * as crypto from 'node:crypto';
+import { IMiddleware } from './middleware.interface.js';
 
-export class UploadFileMiddleware implements Middleware {
+export class UploadFileMiddleware implements IMiddleware {
   constructor(
     private uploadDirectory: string,
     private fieldName: string,

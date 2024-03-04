@@ -50,6 +50,24 @@ npm run lint
 
 **Обратите внимание**, при запуске данной команды, ошибки выводятся в терминал.
 
+### Docker
+
+Запустить сборку контейнеров
+
+```bash
+docker compose up -d
+```
+
+```bash
+docker compose --file ./docker-compose.yml --env-file ./.env --project-name \"six-cities\" up -d
+```
+
+Остановить и удалить контейнеры
+
+```bash
+docker compose --file ./docker-compose.yml --env-file ./.env --project-name \"six-cities\" down
+```
+
 #### Запустить ts-модуль без компиляции
 
 ```bash
@@ -62,6 +80,58 @@ npm run ts -- <Путь к модулю с ts-кодом>
 
 ```bash
 npm start
+```
+
+Запустить проект в dev режиме
+
+```bash
+npm start:dev
+```
+
+В процессе запуска проекта будет выполнен процесс «Сборки проекта» и запуска результирующего кода.
+
+## Сценарии запуска
+
+Запуск скрипта для получения версии приложения:
+
+```bash
+npm run ts -- ./src/main.cli.ts --version
+```
+
+Импорт данных из TSV файла:
+
+```bash
+npm run ts -- ./src/main.cli.ts --import mocks/mock-data.tsv
+```
+
+Импорт данных из нескольких TSV файлов:
+
+```bash
+npm run ts -- ./src/main.cli.ts --import data1.tsv data2.tsv data3.tsv
+```
+
+Импорт данных из TSV файла с указанием соединения с базой данных:
+
+-db-user [логин_базы_данных]
+-db-password [пароль_базы_данных]
+-db-host [сервер_базы_данных]
+-db-port [порт_базы_данных]
+-db-name [имя_базы_данных]
+
+```bash
+npm run ts -- ./src/main.cli.ts --import ./mocks/mock-data.tsv -u [user] -p [password] -h [host] -P [port] -n [dbname]
+```
+
+Генерация мок-данных и запись их в TSV файл:
+
+```bash
+npm run ts -- ./src/main.cli.ts --generate 100 ./mocks/mock-offers.tsv http://localhost:3123/api
+```
+
+Запуск мок-сервера:
+
+```bash
+npm run json-server ./mocks/mock-server-data.json --port 3123
 ```
 
 В процессе запуска проекта будет выполнен процесс «Сборки проекта» и запуска результирующего кода.

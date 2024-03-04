@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
 import cors from 'cors';
-import { Logger } from '../shared/libs/logger/index.js';
-import { Config, RestSchema } from '../shared/libs/config/index.js';
+import { ILogger } from '../shared/libs/logger/index.js';
+import { IConfig, TRestSchema } from '../shared/libs/config/index.js';
 import { EComponent } from '../shared/types/index.js';
-import { DatabaseClient } from '../shared/libs/database-client/index.js';
+import { IDatabaseClient } from '../shared/libs/database-client/index.js';
 import { getFullServerPath, getMongoURI } from '../shared/helpers/index.js';
-import { Controller, ExceptionFilter, ParseTokenMiddleware } from '../shared/libs/rest/index.js';
+import { IController, IExceptionFilter, ParseTokenMiddleware } from '../shared/libs/rest/index.js';
 import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from './index.js';
 
 @injectable()
@@ -14,16 +14,16 @@ export class RestApplication {
   private readonly server: Express = express();
 
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger,
-    @inject(EComponent.Config) private readonly config: Config<RestSchema>,
-    @inject(EComponent.DatabaseClient) private readonly databaseClient: DatabaseClient,
-    @inject(EComponent.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
-    @inject(EComponent.UserController) private readonly userController: Controller,
-    @inject(EComponent.OfferController) private readonly offerController: Controller,
-    @inject(EComponent.CommentController) private readonly commentController: Controller,
-    @inject(EComponent.AuthExceptionFilter) private readonly authExceptionFilter: ExceptionFilter,
-    @inject(EComponent.HttpExceptionFilter) private readonly httpExceptionFilter: ExceptionFilter,
-    @inject(EComponent.ValidationExceptionFilter) private readonly validationExceptionFilter: ExceptionFilter,
+    @inject(EComponent.Logger) private readonly logger: ILogger,
+    @inject(EComponent.Config) private readonly config: IConfig<TRestSchema>,
+    @inject(EComponent.DatabaseClient) private readonly databaseClient: IDatabaseClient,
+    @inject(EComponent.ExceptionFilter) private readonly appExceptionFilter: IExceptionFilter,
+    @inject(EComponent.UserController) private readonly userController: IController,
+    @inject(EComponent.OfferController) private readonly offerController: IController,
+    @inject(EComponent.CommentController) private readonly commentController: IController,
+    @inject(EComponent.AuthExceptionFilter) private readonly authExceptionFilter: IExceptionFilter,
+    @inject(EComponent.HttpExceptionFilter) private readonly httpExceptionFilter: IExceptionFilter,
+    @inject(EComponent.ValidationExceptionFilter) private readonly validationExceptionFilter: IExceptionFilter,
   ) { }
 
   private async initDb() {

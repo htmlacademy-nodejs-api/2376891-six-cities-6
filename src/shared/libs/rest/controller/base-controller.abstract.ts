@@ -2,23 +2,23 @@ import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import { Response, Router } from 'express';
 import asyncHandler from 'express-async-handler';
-import { Controller } from './controller.interface.js';
-import { Logger } from '../../logger/index.js';
-import { Route } from '../index.js';
-import { EComponent } from '../../../types/component.enum.js';
+import { IController } from './controller.interface.js';
+import { ILogger } from '../../logger/index.js';
+import { IRoute } from '../index.js';
+import { EComponent } from '../../../types/index.js';
 import { PathTransformer } from '../transform/path-transformer.js';
 
 const DEFAULT_CONTENT_TYPE = 'application/json';
 
 @injectable()
-export abstract class BaseController implements Controller {
+export abstract class BaseController implements IController {
   protected readonly _router: Router;
 
   @inject(EComponent.PathTransformer)
   private pathTransformer!: PathTransformer;
 
   constructor(
-    protected readonly logger: Logger
+    protected readonly logger: ILogger
   ) {
     this._router = Router();
   }
@@ -27,7 +27,7 @@ export abstract class BaseController implements Controller {
     return this._router;
   }
 
-  public addRoute(route: Route) {
+  public addRoute(route: IRoute) {
     const wrapperAsyncHandler = asyncHandler(route.handler.bind(this));
     const middlewareHandlers = route.middlewares?.map(
       (item) => asyncHandler(item.execute.bind(item))

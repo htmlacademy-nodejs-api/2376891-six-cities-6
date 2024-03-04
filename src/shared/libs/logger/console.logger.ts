@@ -1,7 +1,7 @@
-import { Logger } from './logger.interface.js';
+import { ILogger } from './logger.interface.js';
 import { getErrorMessage } from '../../helpers/index.js';
 
-export class ConsoleLogger implements Logger {
+export class ConsoleLogger implements ILogger {
   public debug(message: string, ...args: unknown[]): void {
     console.debug(message, ...args);
   }

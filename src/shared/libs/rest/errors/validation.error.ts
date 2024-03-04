@@ -1,11 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
-import { ValidationErrorField } from '../index.js';
+import { TValidationErrorField } from '../index.js';
 import { HttpError } from './http-error.js';
 
 export class ValidationError extends HttpError {
-  public details: ValidationErrorField[] = [];
+  public details: TValidationErrorField[] = [];
 
-  constructor(message: string, errors: ValidationErrorField[]) {
+  constructor(message: string, errors: TValidationErrorField[]) {
     super(StatusCodes.BAD_REQUEST, message);
     this.details = errors;
   }
