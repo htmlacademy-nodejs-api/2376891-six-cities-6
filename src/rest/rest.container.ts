@@ -7,6 +7,7 @@ import { EComponent } from '../shared/types/component.enum.js';
 import { DatabaseClient, MongoDatabaseClient } from '../shared/libs/database-client/index.js';
 import { createUserContainer, createOfferContainer, createCommentContainer } from '../shared/modules/index.js';
 import { AppExceptionFilter, ExceptionFilter } from '../shared/libs/rest/index.js';
+import { createAuthContainer } from '../shared/modules/auth/auth.container.js';
 
 function createRestApplicationContainer() {
   const restApplicationContainer = new Container();
@@ -25,4 +26,5 @@ export const getRestApplicationContainer = () => Container.merge(
   createUserContainer(),
   createOfferContainer(),
   createCommentContainer(),
+  createAuthContainer(),
 );

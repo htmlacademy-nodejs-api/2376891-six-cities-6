@@ -1,12 +1,11 @@
 import { IsEmail, IsString, Length } from 'class-validator';
-import { UserDtoMessages } from './user-dto.messages.js';
-import { UserDtoConstraint } from '../../../../utils/const.js';
+import { USER_DTO_CONSTRAINT } from '../../index.js';
 
 export class LoginUserDto {
-  @IsEmail({}, {message: UserDtoMessages.email.invalidFormat})
+  @IsEmail()
   public email!: string;
 
-  @IsString({ message: UserDtoMessages.password.invalidFormat })
-  @Length(UserDtoConstraint.Password.Min, UserDtoConstraint.Password.Max, {message: UserDtoMessages.password.lengthField})
+  @IsString()
+  @Length(USER_DTO_CONSTRAINT.PASSWORD.MIN, USER_DTO_CONSTRAINT.PASSWORD.MAX)
   public password!: string;
 }

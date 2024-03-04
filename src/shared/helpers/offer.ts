@@ -3,7 +3,7 @@ import { toBoolean } from '../../utils/common.js';
 
 export function createMockOffer(offerData: string): TMockOffer {
   const [
-    title, description, date, city, previewImage, images, isPremium, rating, offerType,
+    title, description, date, city, previewImage, images, isPremium, offerType,
     bedrooms, maxAdults, price, goods, name, email, avatarUrl, accountType, comments, latitude, longitude
   ] = offerData.replace('\n', '').split('\t');
 
@@ -13,7 +13,6 @@ export function createMockOffer(offerData: string): TMockOffer {
     avatarUrl,
     password: '',
     accountType: accountType as EUserAccountType,
-    // favorites: []
   };
 
   const location = {
@@ -29,7 +28,6 @@ export function createMockOffer(offerData: string): TMockOffer {
     previewImage,
     images: images.split(';'),
     isPremium: toBoolean(isPremium),
-    rating: Number.parseFloat(rating),
     offerType: offerType as EOfferType,
     bedrooms: Number.parseInt(bedrooms, 10),
     maxAdults: Number.parseInt(maxAdults, 10),

@@ -6,6 +6,9 @@ import { EGood } from '../../../types/good.enum.js';
 import { ECityName } from '../../../types/city-name.enum.js';
 
 export class OfferRdo {
+  // @Expose()
+  // public id!: string;
+
   @Expose()
   public title!: string;
 

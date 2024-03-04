@@ -1,15 +1,8 @@
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsArray, IsBoolean, IsDateString, IsEnum, IsInt, IsLatitude, IsLongitude, IsMongoId, IsObject,
-  IsUrl,
-  Matches,
-  Max, MaxLength, Min, MinLength
-} from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEnum, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsObject,
+  IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { ECityName, EOfferType, EGood, TLocation } from '../../../types/index.js';
-import { OfferDtoValidationMessages } from './offer-dto.messages.js';
 import { Type } from 'class-transformer';
-import { OfferDtoConstraint } from '../../../../utils/const.js';
+import { OFFER_DTO_CONSTRAINT, OFFER_DTO_MESSAGES } from '../../index.js';
 
 class Location {
   @IsLatitude()
@@ -20,61 +13,76 @@ class Location {
 }
 
 export class CreateOfferDto {
-  @MinLength(OfferDtoConstraint.Title.Min, { message: OfferDtoValidationMessages.title.minLength })
-  @MaxLength(OfferDtoConstraint.Title.Max, {message: OfferDtoValidationMessages.title.maxLength})
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(OFFER_DTO_CONSTRAINT.TITLE.MIN)
+  @MaxLength(OFFER_DTO_CONSTRAINT.TITLE.MAX)
   public title!: string;
 
-  @MinLength(OfferDtoConstraint.Description.Min, { message: OfferDtoValidationMessages.description.minLength })
-  @MaxLength(OfferDtoConstraint.Description.Max, {message: OfferDtoValidationMessages.description.maxLength})
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(OFFER_DTO_CONSTRAINT.DESCRIPTION.MIN)
+  @MaxLength(OFFER_DTO_CONSTRAINT.DESCRIPTION.MAX)
   public description!: string;
 
-  @IsDateString({}, {message: OfferDtoValidationMessages.date.invalidFormat})
+  @IsNotEmpty({message: OFFER_DTO_MESSAGES.DATE})
   public date!: Date;
 
-  @IsEnum(ECityName, {message: OfferDtoValidationMessages.city.invalid})
+  @IsNotEmpty()
+  @IsEnum(ECityName, {message: OFFER_DTO_MESSAGES.CITY})
   public city!: ECityName;
 
-  @IsUrl({ message: OfferDtoValidationMessages.previewImage.invalid })
-  @Matches(/\.(jpg|png)(\?.*)?$/i)
+  @IsNotEmpty()
+  @MaxLength(OFFER_DTO_CONSTRAINT.PREVIEW.MAX)
   public previewImage!: string;
 
-  @IsArray({ message: OfferDtoValidationMessages.images.invalidFormat })
-  @ArrayMinSize(OfferDtoConstraint.Images, {message: OfferDtoValidationMessages.images.invalid})
-  @ArrayMaxSize(OfferDtoConstraint.Images, {message: OfferDtoValidationMessages.images.invalid})
+  @IsArray()
+  @ArrayMinSize(OFFER_DTO_CONSTRAINT.IMAGES, {message: OFFER_DTO_MESSAGES.IMAGES})
+  @ArrayMaxSize(OFFER_DTO_CONSTRAINT.IMAGES, {message: OFFER_DTO_MESSAGES.IMAGES})
   public images!: string[];
 
-  @IsBoolean({message: OfferDtoValidationMessages.isPremium.invalidFormat})
+  @IsNotEmpty()
+  @IsBoolean()
   public isPremium!: boolean;
 
-  @IsEnum(EOfferType, {message: OfferDtoValidationMessages.offerType.invalid})
+  @IsNotEmpty()
+  @IsBoolean()
+  public isFavorite?: boolean;
+
+  @IsNotEmpty()
+  @IsEnum(EOfferType, {message: OFFER_DTO_MESSAGES.OFFER_TYPE})
   public offerType!: EOfferType;
 
-  @IsInt({ message: OfferDtoValidationMessages.bedrooms.invalidFormat })
-  @Min(OfferDtoConstraint.Bedrooms.Min)
-  @Max(OfferDtoConstraint.Bedrooms.Max)
+  @IsNotEmpty()
+  @IsInt()
+  @Min(OFFER_DTO_CONSTRAINT.BEDROOMS.MIN)
+  @Max(OFFER_DTO_CONSTRAINT.BEDROOMS.MAX)
   public bedrooms!: number;
 
-  @IsInt({ message: OfferDtoValidationMessages.maxAdults.invalidFormat })
-  @Min(OfferDtoConstraint.Adults.Min)
-  @Max(OfferDtoConstraint.Adults.Max)
+  @IsNotEmpty()
+  @IsInt()
+  @Min(OFFER_DTO_CONSTRAINT.ADULTS.MIN)
+  @Max(OFFER_DTO_CONSTRAINT.ADULTS.MAX)
   public maxAdults!: number;
 
-  @IsInt({ message: OfferDtoValidationMessages.price.invalidFormat })
-  @Min(OfferDtoConstraint.Price.Min, { message: OfferDtoValidationMessages.price.minValue })
-  @Max(OfferDtoConstraint.Price.Max, {message: OfferDtoValidationMessages.price.maxValue})
+  @IsNotEmpty()
+  @IsInt()
+  @Min(OFFER_DTO_CONSTRAINT.PRICE.MIN)
+  @Max(OFFER_DTO_CONSTRAINT.PRICE.MAX)
   public price!: number;
 
-  @IsArray({message: OfferDtoValidationMessages.goods.invalidFormat})
-  @IsEnum(EGood, { each: true, message: OfferDtoValidationMessages.goods.invalid })
+  @IsNotEmpty()
+  @IsArray()
+  @IsEnum(EGood, { each: true, message: OFFER_DTO_MESSAGES.GOODS })
   public goods!: EGood[];
 
-  @IsMongoId({message: OfferDtoValidationMessages.userId.invalidId})
   public userId!: string;
 
-  @IsInt({message: OfferDtoValidationMessages.commentCount.invalidFormat})
+  @IsInt()
   public commentCount!: number;
 
-  @IsObject({ message: OfferDtoValidationMessages.location.invalid })
+  @IsNotEmpty()
+  @IsObject({ message: OFFER_DTO_MESSAGES.LOCATION })
   @Type(() => Location)
   public location!: TLocation;
 }

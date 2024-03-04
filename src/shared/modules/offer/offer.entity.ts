@@ -1,5 +1,5 @@
 import { Ref, defaultClasses, modelOptions, prop } from '@typegoose/typegoose';
-import { ECityName, EGood, EOfferType as EOfferType, TLocation, TOffer } from '../../types/index.js';
+import { ECityName, EGood, EOfferType as EOfferType, TLocation } from '../../types/index.js';
 import { UserEntity } from '../user/user.entity.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -26,14 +26,17 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, type: () => String })
   public city!: ECityName;
 
-  @prop({ required: true, type: () => String })
+  @prop({ required: true, type: () => String, default: 'https://14.design.htmlacademy.pro/static/avatar/6.jpg' })
   public previewImage!: string;
 
-  @prop({ required: true })
+  @prop({ required: true, type: () => [String] })
   public images!: string[];
 
   @prop({ required: true, type: () => Boolean })
   public isPremium!: boolean;
+
+  // @prop({ required: true, type: () => Boolean })
+  // public isFavorite!: boolean;
 
   @prop({ required: true, type: () => Number })
   public rating!: number;
@@ -50,36 +53,15 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, type: () => Number })
   public price!: number;
 
-  @prop({ required: true, type: () => String })
+  @prop({ required: true, type: () => [String] })
   public goods!: EGood[];
 
-  @prop({ required: true, ref: () => UserEntity, _id: false })
+  @prop({ required: true, ref: () => UserEntity })
   public userId!: Ref<UserEntity>;
 
-  @prop({ required: false, default: 0, type: () => Number })
+  @prop({ default: 0, type: () => Number })
   public commentCount!: number;
 
   @prop({ required: true })
   public location!: TLocation;
-
-  constructor(offerData: TOffer) {
-    super();
-
-    this.title = offerData.title;
-    this.description = offerData.description;
-    this.date = offerData.date;
-    this.city = offerData.city;
-    this.previewImage = offerData.previewImage;
-    this.images = offerData.images;
-    this.isPremium = offerData.isPremium;
-    this.rating = offerData.rating;
-    this.offerType = offerData.offerType;
-    this.bedrooms = offerData.bedrooms;
-    this.maxAdults = offerData.maxAdults;
-    this.price = offerData.price;
-    this.goods = offerData.goods;
-    this.userId = offerData.userId;
-    this.commentCount = offerData.commentCount;
-    this.location = offerData.location;
-  }
 }
