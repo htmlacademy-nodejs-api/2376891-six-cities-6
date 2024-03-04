@@ -6,6 +6,7 @@ import { inject, injectable } from 'inversify';
 import { EComponent, TUniqueQuery } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
+import { DEFAULT_AVATAR_FILE_NAME } from './user.constant.js';
 
 export type TFavoriteIds = string[];
 
@@ -17,7 +18,7 @@ export class DefaultUserService implements UserService {
   ) {}
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
-    const user = new UserEntity(dto, salt);
+    const user = new UserEntity({...dto, avatarUrl: DEFAULT_AVATAR_FILE_NAME}, salt);
 
     const result = await this.userModel.create(user);
     this.logger.info(`New user created: ${user.email}`);

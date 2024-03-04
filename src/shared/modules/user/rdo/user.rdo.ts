@@ -2,8 +2,8 @@ import { Expose } from 'class-transformer';
 import { EUserAccountType } from '../../../types/user.type.js';
 
 export class UserRdo {
-  // @Expose()
-  // public id!: string;
+  @Expose()
+  public id!: string;
 
   @Expose()
   public name!: string;

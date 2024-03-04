@@ -1,3 +1,5 @@
+export const DEFAULT_AVATAR_FILE_NAME = 'default-avatar.jpg';
+
 export const USER_DTO_CONSTRAINT = {
   NAME: { MIN: 1, MAX: 15 },
   PASSWORD: { MIN: 6, MAX: 12 },

@@ -79,18 +79,15 @@ export class UserController extends BaseController {
   public async login({ body }: LoginUserRequest, res: Response,): Promise<void> {
     const user = await this.authService.verify(body);
     const token = await this.authService.authenticate(user);
-    const responseData = fillDTO(LoggedUserRdo, {
-      email: user.email,
-      token,
-    });
-    this.ok(res, responseData);
+    const responseData = fillDTO(LoggedUserRdo, user);
+    this.ok(res, Object.assign(responseData, { token }));
   }
 
   public async uploadAvatar({ params, file }: Request, res: Response) {
     const { userId } = params;
     const uploadFile = { avatarUrl: file?.filename };
     await this.userService.updateById(userId, uploadFile);
-    this.created(res, fillDTO(UploadUserAvatarRdo, uploadFile));
+    this.created(res, fillDTO(UploadUserAvatarRdo, {filePath: uploadFile.avatarUrl}));
   }
 
   public async checkAuthenticate({ tokenPayload: { email } }: Request, res: Response) {

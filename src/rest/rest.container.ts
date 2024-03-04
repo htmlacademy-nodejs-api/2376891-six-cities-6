@@ -9,6 +9,7 @@ import { createUserContainer, createOfferContainer, createCommentContainer } fro
 import { AppExceptionFilter, ExceptionFilter, ValidationExceptionFilter } from '../shared/libs/rest/index.js';
 import { createAuthContainer } from '../shared/modules/auth/auth.container.js';
 import { HttpErrorExceptionFilter } from '../shared/libs/rest/exception-filter/http-error.exception-filter.js';
+import { PathTransformer } from '../shared/libs/rest/transform/path-transformer.js';
 
 function createRestApplicationContainer() {
   const restApplicationContainer = new Container();
@@ -20,6 +21,7 @@ function createRestApplicationContainer() {
   restApplicationContainer.bind<ExceptionFilter>(EComponent.ExceptionFilter).to(AppExceptionFilter).inSingletonScope();
   restApplicationContainer.bind<ExceptionFilter>(EComponent.HttpExceptionFilter).to(HttpErrorExceptionFilter).inSingletonScope();
   restApplicationContainer.bind<ExceptionFilter>(EComponent.ValidationExceptionFilter).to(ValidationExceptionFilter).inSingletonScope();
+  restApplicationContainer.bind<PathTransformer>(EComponent.PathTransformer).to(PathTransformer).inSingletonScope();
 
   return restApplicationContainer;
 }
