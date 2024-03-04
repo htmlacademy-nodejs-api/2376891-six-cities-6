@@ -5,8 +5,7 @@ import { Config, RestSchema } from '../shared/libs/config/index.js';
 import { EComponent } from '../shared/types/index.js';
 import { DatabaseClient } from '../shared/libs/database-client/index.js';
 import { getMongoURI } from '../shared/helpers/index.js';
-import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
-import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/parse-token.middleware.js';
+import { Controller, ExceptionFilter, ParseTokenMiddleware } from '../shared/libs/rest/index.js';
 
 @injectable()
 export class RestApplication {
@@ -21,6 +20,8 @@ export class RestApplication {
     @inject(EComponent.OfferController) private readonly offerController: Controller,
     @inject(EComponent.CommentController) private readonly commentController: Controller,
     @inject(EComponent.AuthExceptionFilter) private readonly authExceptionFilter: ExceptionFilter,
+    @inject(EComponent.HttpExceptionFilter) private readonly httpExceptionFilter: ExceptionFilter,
+    @inject(EComponent.ValidationExceptionFilter) private readonly validationExceptionFilter: ExceptionFilter,
   ) { }
 
   private async initDb() {
@@ -59,6 +60,8 @@ export class RestApplication {
 
   private async _initExceptionFilters() {
     this.server.use(this.authExceptionFilter.catch.bind(this.authExceptionFilter));
+    this.server.use(this.validationExceptionFilter.catch.bind(this.validationExceptionFilter));
+    this.server.use(this.httpExceptionFilter.catch.bind(this.httpExceptionFilter));
     this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
   }
 
