@@ -1,5 +1,5 @@
 export enum EUserAccountType {
-  Common = 'regular',
+  Common = 'обычный',
   Pro = 'pro',
 }
 

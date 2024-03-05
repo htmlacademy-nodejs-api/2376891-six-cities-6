@@ -38,24 +38,24 @@ export class RestApplication {
     return this.databaseClient.connect(mongoUri);
   }
 
-  private async _initServer() {
+  private async initServer() {
     const port = this.config.get('PORT');
     this.server.listen(port);
   }
 
-  private async _initControllers() {
+  private async initControllers() {
     this.server.use('/users', this.userController.router);
     this.server.use('/offers', this.offerController.router);
     this.server.use('/comments', this.commentController.router);
   }
 
-  private async _initMiddleware() {
+  private async initMiddleware() {
     const authenticateMiddleware = new ParseTokenMiddleware(this.config.get('JWT_SECRET'));
 
     this.server.use(express.json());
     this.server.use(
       STATIC_UPLOAD_ROUTE,
-      express.static(this.config.get('UPLOAD_DIRECTORY'))
+      express.static(this.config.get('UPLOAD_DIRECTORY_PATH'))
     );
     this.server.use(
       STATIC_FILES_ROUTE,
@@ -65,7 +65,7 @@ export class RestApplication {
     this.server.use(cors());
   }
 
-  private async _initExceptionFilters() {
+  private async initExceptionFilters() {
     this.server.use(this.authExceptionFilter.catch.bind(this.authExceptionFilter));
     this.server.use(this.validationExceptionFilter.catch.bind(this.validationExceptionFilter));
     this.server.use(this.httpExceptionFilter.catch.bind(this.httpExceptionFilter));
@@ -81,19 +81,19 @@ export class RestApplication {
     this.logger.info('Init database completed');
 
     this.logger.info('Init app-level middleware');
-    await this._initMiddleware();
+    await this.initMiddleware();
     this.logger.info('App-level middleware initialization completed');
 
     this.logger.info('Init controllers');
-    await this._initControllers();
+    await this.initControllers();
     this.logger.info('Controller initialization completed');
 
     this.logger.info('Init exception filters');
-    await this._initExceptionFilters();
+    await this.initExceptionFilters();
     this.logger.info('Exception filters initialization completed');
 
     this.logger.info('Try to init server...');
-    await this._initServer();
+    await this.initServer();
     this.logger.info(`🚀 Server started on ${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}`);
   }
 }
