@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
-import { OfferGenerator } from './offer-generator.interface.js';
+import { IOfferGenerator } from './offer-generator.interface.js';
 import { TMockServerData, ELocation } from '../../types/index.js';
 import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/index.js';
 import { EWeekDay } from '../../../utils/const.js';
-import { OFFER_DTO_CONSTRAINT, ECommentsConstraint } from '../../modules/index.js';
+import { OfferDtoConstraint, ECommentsConstraint } from '../../modules/index.js';
 
-export class TSVOfferGenerator implements OfferGenerator {
+export class TSVOfferGenerator implements IOfferGenerator {
   constructor(
     private readonly mockData: TMockServerData
   ) { }
@@ -19,9 +19,9 @@ export class TSVOfferGenerator implements OfferGenerator {
     const images = getRandomItems<string>(this.mockData.images).join(';');
     const isPremium = getRandomItem<string>(this.mockData.isPremium);
     const offerType = getRandomItem<string>(this.mockData.offerTypes);
-    const bedrooms = generateRandomValue(OFFER_DTO_CONSTRAINT.BEDROOMS.MAX, OFFER_DTO_CONSTRAINT.BEDROOMS.MAX);
-    const maxAdults = generateRandomValue(OFFER_DTO_CONSTRAINT.ADULTS.MIN, OFFER_DTO_CONSTRAINT.ADULTS.MAX);
-    const price = generateRandomValue(OFFER_DTO_CONSTRAINT.PRICE.MIN, OFFER_DTO_CONSTRAINT.PRICE.MAX);
+    const bedrooms = generateRandomValue(OfferDtoConstraint.Bedrooms.MAX, OfferDtoConstraint.Bedrooms.MAX);
+    const maxAdults = generateRandomValue(OfferDtoConstraint.Adults.MIN, OfferDtoConstraint.Adults.MAX);
+    const price = generateRandomValue(OfferDtoConstraint.Price.MIN, OfferDtoConstraint.Price.MAX);
     const goods = getRandomItems<string>(this.mockData.goods).join(';');
     const user = getRandomItem<string>(this.mockData.users);
     const email = getRandomItem<string>(this.mockData.emails);

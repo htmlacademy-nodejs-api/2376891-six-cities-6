@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { RequestBody, RequestParams } from '../../../libs/rest/index.js';
+import { TRequestBody, TRequestParams } from '../../../libs/rest/index.js';
 import { CreateOfferDto } from '../dto/create-offer.dto.js';
 
-export type TCreateOfferRequest = Request<RequestParams, RequestBody, CreateOfferDto>;
+export type TCreateOfferRequest = Request<TRequestParams, TRequestBody, CreateOfferDto>;

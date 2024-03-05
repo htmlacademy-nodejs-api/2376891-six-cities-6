@@ -16,7 +16,8 @@ export class HelpCommand implements ICommand {
         npm run ts ./src/main.cli.ts
         npm run ts ./src/main.cli.ts -- --version
         npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv
-        npm run ts ./src/main.cli.ts -- --generate 10 ./mocks/mock-offers.tsv http://localhost:3123/api
+        npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv keks password 127.0.0.1 27017 six-cities secret
+        npm run ts ./src/main.cli.ts -- --generate 10 ./mocks/mock-data.tsv http://localhost:3123/api
       Команды:
         --version:                   # выводит в консоль номер версии приложения из файла package.json
         --help:                      # печатает информацию о доступных командах. Команда по умолчанию

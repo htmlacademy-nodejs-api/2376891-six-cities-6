@@ -1,14 +1,14 @@
 import { inject, injectable } from 'inversify';
-import { ExceptionFilter } from '../../libs/rest/index.js';
-import { EComponent } from '../../types/component.enum.js';
-import { Logger } from '../../libs/logger/index.js';
+import { IExceptionFilter } from '../../libs/rest/index.js';
+import { EComponent } from '../../types/index.js';
+import { ILogger } from '../../libs/logger/index.js';
 import { Request, Response, NextFunction } from 'express';
 import { BaseUserException } from './errors/base-user.exception.js';
 
 @injectable()
-export class AuthExceptionFilter implements ExceptionFilter {
+export class AuthExceptionFilter implements IExceptionFilter {
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger
+    @inject(EComponent.Logger) private readonly logger: ILogger
   ) {
     this.logger.info('Register AuthExceptionFilter');
   }

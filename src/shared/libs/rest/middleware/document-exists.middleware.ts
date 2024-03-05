@@ -1,12 +1,12 @@
-import { Middleware } from './middleware.interface.js';
-import { DocumentExists } from '../../../types/index.js';
-import { Request, Response, NextFunction } from 'express';
+import { IMiddleware } from './middleware.interface.js';
+import { IDocumentExists } from '../../../types/index.js';
 import { HttpError } from '../errors/http-error.js';
+import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-export class DocumentExistsMiddleware implements Middleware {
+export class DocumentExistsMiddleware implements IMiddleware {
   constructor(
-    private readonly service: DocumentExists,
+    private readonly service: IDocumentExists,
     private readonly entityName: string,
     private readonly paramName: string,
   ) { }

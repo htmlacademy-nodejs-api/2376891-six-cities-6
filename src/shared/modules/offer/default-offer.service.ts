@@ -1,7 +1,7 @@
 import { OfferService } from './offer-service.interface.js';
 import { inject, injectable } from 'inversify';
 import { EComponent, ESortType, TFindOfferParameters } from '../../types/index.js';
-import { Logger } from '../../libs/logger/index.js';
+import { ILogger } from '../../libs/logger/index.js';
 import { DocumentType, Ref, types } from '@typegoose/typegoose';
 import { OfferEntity } from './offer.entity.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
@@ -14,7 +14,7 @@ import { TAddFavoriteOfferParameters } from './type/add-favorite-parameters.type
 @injectable()
 export class DefaultOfferService implements OfferService {
   constructor(
-    @inject(EComponent.Logger) private readonly logger: Logger,
+    @inject(EComponent.Logger) private readonly logger: ILogger,
     @inject(EComponent.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
   ) { }
 
@@ -26,9 +26,10 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async findByOfferId(data: TAddFavoriteOfferParameters): Promise<DocumentType<OfferEntity>[] | null> {
+    const offerIdObject = new ObjectId(data.offerId);
     const detailOffer = await this.offerModel
       .aggregate([
-        { $match: { _id: new ObjectId(data.offerId) } },
+        { $match: { _id: offerIdObject } },
         {
           $lookup: {
             from: 'comments',
@@ -91,13 +92,13 @@ export class DefaultOfferService implements OfferService {
             isFavorite: {
               $cond: {
                 if: { $gt: [{ $size: { $ifNull: [data.userFavorites, []] } }, 0] },
-                then: {$in: ['$_id', data.userFavorites]},
+                then: {$in: [data.offerId, data.userFavorites]},
                 else: false
               }
             },
           }
         },
-        { $unset: ['_id', 'authUser', 'offerComments', 'averageRating']}
+        { $unset: ['_id', 'authUser', 'offerComments', 'averageRating', 'user']}
       ]).exec();
     return detailOffer;
   }
@@ -105,7 +106,7 @@ export class DefaultOfferService implements OfferService {
   public async find(params: TFindOfferParameters): Promise<DocumentType<OfferEntity>[]> {
     const result = await this.offerModel
       .aggregate([
-        { $sort: { createdAt: ESortType.Down } },
+        { $sort: { date: ESortType.Down } },
         { $limit: params.offerCount },
         {
           $lookup: {
@@ -124,6 +125,7 @@ export class DefaultOfferService implements OfferService {
         {
           $group: {
             _id: '$_id',
+            id: {$first: '$id'},
             title: { $first: '$title' },
             date: { $first: '$date' },
             city: { $first: '$city' },
@@ -196,7 +198,7 @@ export class DefaultOfferService implements OfferService {
 
     const result = await this.offerModel
       .aggregate([
-        { $sort: { createdAt: ESortType.Down } },
+        { $sort: { date: ESortType.Down } },
         { $match: { city: city, isPremium: true } },
         { $limit: DEFAULT_PREMIUM_OFFER_COUNT },
         {

@@ -1,11 +1,7 @@
 import { Expose } from 'class-transformer';
-import { EOfferType } from '../../../types/housing-type.enum.js';
-import { ECityName } from '../../../types/city-name.enum.js';
+import { EOfferType, ECityName } from '../../../types/index.js';
 
 export class PreviewOfferRdo {
-  // @Expose()
-  // public id!: string;
-
   @Expose()
   public title!: string;
 

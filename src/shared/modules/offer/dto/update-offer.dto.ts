@@ -1,5 +1,5 @@
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEnum, IsInt, IsLatitude, IsLongitude, IsObject, IsOptional, IsString, Length, Max, MaxLength, Min } from 'class-validator';
-import { OFFER_DTO_CONSTRAINT, OFFER_DTO_MESSAGES } from '../offer.constant.js';
+import { OfferDtoConstraint, OfferDtoMessages } from '../offer.constant.js';
 import { ECityName, EOfferType, EGood, TLocation } from '../../../types/index.js';
 import { Type } from 'class-transformer';
 
@@ -14,29 +14,29 @@ class Location {
 export class UpdateOfferDto {
   @IsOptional()
   @IsString()
-  @Length(OFFER_DTO_CONSTRAINT.TITLE.MIN, OFFER_DTO_CONSTRAINT.TITLE.MAX)
+  @Length(OfferDtoConstraint.Title.MIN, OfferDtoConstraint.Title.MAX)
   public title?: string;
 
   @IsOptional()
   @IsString()
-  @Length(OFFER_DTO_CONSTRAINT.DESCRIPTION.MIN, OFFER_DTO_CONSTRAINT.DESCRIPTION.MAX)
+  @Length(OfferDtoConstraint.Description.MIN, OfferDtoConstraint.Description.MAX)
   public description?: string;
 
   @IsOptional()
   public date?: Date;
 
   @IsOptional()
-  @IsEnum(ECityName, {message: OFFER_DTO_MESSAGES.CITY})
+  @IsEnum(ECityName, {message: OfferDtoMessages.City})
   public city?: ECityName;
 
   @IsOptional()
-  @MaxLength(OFFER_DTO_CONSTRAINT.PREVIEW.MAX)
+  @MaxLength(OfferDtoConstraint.Preview.MAX)
   public previewImage?: string;
 
   @IsOptional()
   @IsArray()
-  @ArrayMinSize(OFFER_DTO_CONSTRAINT.IMAGES, {message: OFFER_DTO_MESSAGES.IMAGES})
-  @ArrayMaxSize(OFFER_DTO_CONSTRAINT.IMAGES, {message: OFFER_DTO_MESSAGES.IMAGES})
+  @ArrayMinSize(OfferDtoConstraint.Images, {message: OfferDtoMessages.Images})
+  @ArrayMaxSize(OfferDtoConstraint.Images, {message: OfferDtoMessages.Images})
   public images?: string[];
 
   @IsOptional()
@@ -48,41 +48,37 @@ export class UpdateOfferDto {
   public isFavorite?: boolean;
 
   @IsOptional()
-  @IsEnum(EOfferType, {message: OFFER_DTO_MESSAGES.OFFER_TYPE})
+  @IsEnum(EOfferType, {message: OfferDtoMessages.OfferType})
   public offerType?: EOfferType;
 
   @IsOptional()
   @IsInt()
-  @Min(OFFER_DTO_CONSTRAINT.BEDROOMS.MIN)
-  @Max(OFFER_DTO_CONSTRAINT.BEDROOMS.MAX)
+  @Min(OfferDtoConstraint.Bedrooms.MIN)
+  @Max(OfferDtoConstraint.Bedrooms.MAX)
   public bedrooms?: number;
 
   @IsOptional()
   @IsInt()
-  @Min(OFFER_DTO_CONSTRAINT.ADULTS.MIN)
-  @Max(OFFER_DTO_CONSTRAINT.ADULTS.MAX)
+  @Min(OfferDtoConstraint.Adults.MIN)
+  @Max(OfferDtoConstraint.Adults.MAX)
   public maxAdults?: number;
 
   @IsOptional()
   @IsInt()
-  @Min(OFFER_DTO_CONSTRAINT.PRICE.MIN)
-  @Max(OFFER_DTO_CONSTRAINT.PRICE.MAX)
+  @Min(OfferDtoConstraint.Price.MIN)
+  @Max(OfferDtoConstraint.Price.MAX)
   public price?: number;
 
   @IsOptional()
   @IsArray()
-  @IsEnum(EGood, { each: true, message: OFFER_DTO_MESSAGES.GOODS })
+  @IsEnum(EGood, { each: true, message: OfferDtoMessages.Goods })
   public goods?: EGood[];
 
   @IsOptional()
   public userId?: string;
 
-  // @IsOptional()
-  // @IsInt({message: OFFER_DTO_VALIDATION_MESSAGES.commentCount})
-  // public commentCount?: number;
-
   @IsOptional()
-  @IsObject({ message: OFFER_DTO_MESSAGES.LOCATION })
+  @IsObject({ message: OfferDtoMessages.Location })
   @Type(() => Location)
   public location?: TLocation;
 }

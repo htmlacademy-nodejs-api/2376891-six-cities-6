@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
 import { TUniqueQuery } from '../../types/index.js';
 
-export interface UserService {
+export interface IUserService {
   create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>>;
   findUnique(data: TUniqueQuery): Promise<DocumentType<UserEntity> | null>;
   findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>>;

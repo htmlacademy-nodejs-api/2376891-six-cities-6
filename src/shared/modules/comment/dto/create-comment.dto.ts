@@ -1,10 +1,10 @@
 import { IsInt, IsMongoId, IsNotEmpty, IsString, Length, Max, Min } from 'class-validator';
-import { COMMENT_DTO_CONSTRAINT } from '../../index.js';
+import { CommentDtoConstraint } from '../../index.js';
 
 export class CreateCommentDto {
   @IsNotEmpty()
   @IsString()
-  @Length(COMMENT_DTO_CONSTRAINT.TEXT.MIN, COMMENT_DTO_CONSTRAINT.TEXT.MAX)
+  @Length(CommentDtoConstraint.Text.MIN, CommentDtoConstraint.Text.MAX)
   public text!: string;
 
   @IsNotEmpty()
@@ -13,8 +13,8 @@ export class CreateCommentDto {
 
   @IsNotEmpty()
   @IsInt()
-  @Min(COMMENT_DTO_CONSTRAINT.RATING.MIN)
-  @Max(COMMENT_DTO_CONSTRAINT.RATING.MAX)
+  @Min(CommentDtoConstraint.Rating.MIN)
+  @Max(CommentDtoConstraint.Rating.MAX)
   public rating!: number;
 
   public userId!: string;

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { Middleware } from './middleware.interface.js';
-import { HttpError } from '../index.js';
 import { StatusCodes } from 'http-status-codes';
+import { IMiddleware } from './middleware.interface.js';
+import { HttpError } from '../index.js';
 
-export class PrivateRouteMiddleware implements Middleware {
+export class PrivateRouteMiddleware implements IMiddleware {
   public async execute({tokenPayload}: Request, _res: Response, next: NextFunction): Promise<void> {
     if (!tokenPayload) {
       throw new HttpError(

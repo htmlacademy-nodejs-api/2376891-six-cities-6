@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { TTokenPayload } from '../../../modules/auth/index.js';
-import { Middleware } from './middleware.interface.js';
 import { jwtVerify } from 'jose';
 import { createSecretKey } from 'node:crypto';
-import { HttpError } from '../index.js';
 import { StatusCodes } from 'http-status-codes';
+import { TTokenPayload } from '../../../modules/auth/index.js';
+import { IMiddleware } from './middleware.interface.js';
+import { HttpError } from '../index.js';
 
 function isTokenPayload(payload: unknown): payload is TTokenPayload {
   return (
@@ -14,7 +14,7 @@ function isTokenPayload(payload: unknown): payload is TTokenPayload {
   );
 }
 
-export class ParseTokenMiddleware implements Middleware {
+export class ParseTokenMiddleware implements IMiddleware {
   constructor(private readonly jwtSecret: string) { }
 
   public async execute(req: Request, _res: Response, next: NextFunction): Promise<void> {

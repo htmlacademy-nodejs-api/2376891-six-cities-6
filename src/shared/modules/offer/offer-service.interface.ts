@@ -1,13 +1,16 @@
-import { DocumentType, Ref } from '@typegoose/typegoose';
+import {
+  DocumentType,
+  Ref
+} from '@typegoose/typegoose';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { OfferEntity } from './offer.entity.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
-import { DocumentExists } from '../../types/document-exists.interface.js';
+import { IDocumentExists } from '../../types/document-exists.interface.js';
 import { TFindOfferParameters } from './type/find-offer-parameters.type.js';
 import { TFindPremiumOfferParameters } from './type/find-premium-offer-parameters.type.js';
 import { TAddFavoriteOfferParameters } from './type/add-favorite-parameters.type.js';
 
-export interface OfferService extends DocumentExists {
+export interface OfferService extends IDocumentExists {
   create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>>;
   findByOfferId(data: TAddFavoriteOfferParameters): Promise<DocumentType<OfferEntity>[] | null>;
   find(params: TFindOfferParameters): Promise<DocumentType<OfferEntity>[]>;

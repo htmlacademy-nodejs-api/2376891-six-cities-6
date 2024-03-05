@@ -1,11 +1,9 @@
-import { IsBoolean, IsMongoId, IsOptional } from 'class-validator';
+import { Ref } from '@typegoose/typegoose';
+import { IsArray, IsOptional } from 'class-validator';
+import { OfferEntity } from '../../index.js';
 
 export class UpdateFavoritesDto {
   @IsOptional()
-  @IsMongoId()
-  public offerId?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  public isFavorite?: boolean;
+  @IsArray()
+  public favorites?: Ref<OfferEntity>[];
 }

@@ -1,6 +1,6 @@
 # Получить объявление по идентификатору
 GET http://localhost:4000/offers/65e2310e1ab2a66fac5158de HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTIzMjViZDY3MzhmN2YwZGU4YzQzOCIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rLm5ldCIsImlhdCI6MTcwOTQ5NzY4MiwiZXhwIjoxNzA5NjcwNDgyfQ.pfm8JRw-nwcpBx5UvVCwALeNAQ-ye7VdeGgN7RhZ0Jk
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug
 
 ###
 
@@ -10,7 +10,7 @@ GET http://localhost:4000/offers/65e2310e1ab2a66fac5158de HTTP/1.1
 
 ## Получить список объявлений
 GET http://localhost:4000/offers HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTIzMjViZDY3MzhmN2YwZGU4YzQzOCIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rLm5ldCIsImlhdCI6MTcwOTQ5NzY4MiwiZXhwIjoxNzA5NjcwNDgyfQ.pfm8JRw-nwcpBx5UvVCwALeNAQ-ye7VdeGgN7RhZ0Jk
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug
 
 ###
 
@@ -26,13 +26,12 @@ GET http://localhost:4000/offers?limit=2 HTTP/1.1
 
 ## Получить список премиальных объявлений
 
-GET http://localhost:4000/offers/Brussels/premium HTTP/1.1
+GET http://localhost:4000/offers/Amsterdam/premium HTTP/1.1
 
 ###
 
-GET http://localhost:4000/offers/Brussels/premium HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTIzMjViZDY3MzhmN2YwZGU4YzQzOCIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rLm5ldCIsImlhdCI6MTcwOTQ5NzY4MiwiZXhwIjoxNzA5NjcwNDgyfQ.pfm8JRw-nwcpBx5UvVCwALeNAQ-ye7VdeGgN7RhZ0Jk
-
+GET http://localhost:4000/offers/Amsterdam/premium HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug
 
 ###
 
@@ -57,10 +56,10 @@ Content-Type: application/json
     "https://14.react.pages.academy/static/offer/3.jpg"
     ],
   "isPremium": true,
-  "isFavorite": false,
-  "rating": 2,
+  "isFavorite": true,
+  "rating": 4.1,
   "offerType": "Apartment",
-  "bedrooms": 3,
+  "bedrooms": 1,
   "maxAdults": 4,
   "price": 1500,
   "goods": ["Breakfast", "Fridge"],
@@ -73,15 +72,15 @@ Content-Type: application/json
 
 ## Удалить объявление по идентификатору
 
-DELETE http://localhost:4000/offers/65e47e3c2ef56216cb1efffa HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTIzMjViZDY3MzhmN2YwZGU4YzQzOCIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rLm5ldCIsImlhdCI6MTcwOTQ5NzY4MiwiZXhwIjoxNzA5NjcwNDgyfQ.pfm8JRw-nwcpBx5UvVCwALeNAQ-ye7VdeGgN7RhZ0Jk
+DELETE http://localhost:4000/offers/65e67028522897cba9b50fbd HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug
 
 ###
 
 ## Обновить объявление
 
-PATCH http://localhost:4000/offers/65e47e3c2ef56216cb1efffa HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTIzMjViZDY3MzhmN2YwZGU4YzQzOCIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rLm5ldCIsImlhdCI6MTcwOTQ5NzY4MiwiZXhwIjoxNzA5NjcwNDgyfQ.pfm8JRw-nwcpBx5UvVCwALeNAQ-ye7VdeGgN7RhZ0Jk
+PATCH http://localhost:4000/offers/65e66b83221ab4c5d5843692 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug
 Content-Type: application/json
 
 {
@@ -96,14 +95,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N
 
 ###
 
-## Добавить объявление в избранное
-PATCH http://localhost:4000/offers/65e2310e1ab2a66fac5158de/addFavorite HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug
-
-###
-
-## Удалить объявление из избранного
-PATCH http://localhost:4000/offers/65e2310e1ab2a66fac5158de/deleteFavorite HTTP/1.1
+## Добавить/удалить объявление в/из избранного
+PATCH http://localhost:4000/offers/65e6a0d7e052f5e21290f43c/updateFavorites HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1ZTRkZWU2NGFhZjI4MDNhZjU2N2IyNSIsImVtYWlsIjoidG9yYW5zQG92ZXJsb29rMi5uZXQiLCJpYXQiOjE3MDk0OTgxMjIsImV4cCI6MTcwOTY3MDkyMn0.Bi6EtbThXlzhiwtllemFAb1dtWeVQv9r2RoejewENug
 
 ###
