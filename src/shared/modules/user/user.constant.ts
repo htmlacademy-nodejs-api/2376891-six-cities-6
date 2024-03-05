@@ -6,6 +6,6 @@ export const UserDtoConstraint = {
 } as const;
 
 export const UserDtoMessages = {
-  AccountType: 'AccountType must be regular and pro.',
+  AccountType: 'AccountType must be обычный and pro.',
 } as const;
 

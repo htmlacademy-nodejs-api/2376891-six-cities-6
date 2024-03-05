@@ -11,7 +11,7 @@ export type TRestSchema = {
   DB_PASSWORD: string;
   DB_PORT: string;
   DB_NAME: string;
-  UPLOAD_DIRECTORY: string;
+  UPLOAD_DIRECTORY_PATH: string;
   JWT_SECRET: string;
   JWT_EXPIRED: string;
   HOST: string;
@@ -53,19 +53,25 @@ export const configRestSchema = convict<TRestSchema>({
     doc: 'Port to connect to the database (MongoDB)',
     format: 'port',
     env: 'DB_PORT',
-    default: '27017'
+    default: null
   },
   DB_NAME: {
     doc: 'Database name (MongoDB)',
     format: String,
     env: 'DB_NAME',
-    default: 'six-cities'
+    default: null
   },
-  UPLOAD_DIRECTORY: {
+  UPLOAD_DIRECTORY_PATH: {
     doc: 'Directory for upload files',
     format: String,
-    env: 'UPLOAD_DIRECTORY',
+    env: 'UPLOAD_DIRECTORY_PATH',
     default: null,
+  },
+  STATIC_DIRECTORY_PATH: {
+    doc: 'Path to directory with static resources',
+    format: String,
+    env: 'STATIC_DIRECTORY_PATH',
+    default: null
   },
   JWT_SECRET: {
     doc: 'Secret for sign JWT',
@@ -83,12 +89,6 @@ export const configRestSchema = convict<TRestSchema>({
     doc: 'Host where started service',
     format: String,
     env: 'HOST',
-    default: 'localhost'
-  },
-  STATIC_DIRECTORY_PATH: {
-    doc: 'Path to directory with static resources',
-    format: String,
-    env: 'STATIC_DIRECTORY_PATH',
-    default: 'static'
+    default: null
   },
 });
