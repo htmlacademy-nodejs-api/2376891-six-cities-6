@@ -6,7 +6,7 @@ import { ILogger } from '../../libs/logger/index.js';
 import { LoginUserDto, UserEntity, IUserService } from '../index.js';
 import { IConfig, TRestSchema } from '../../libs/config/index.js';
 import { SignJWT } from 'jose';
-import { TTokenPayload } from './types/TokenPayload.js';
+import { TTokenPayload } from './types/token-payload.type.js';
 import { UserNotFoundException, UserPasswordIncorrectException } from './errors/index.js';
 
 @injectable()
